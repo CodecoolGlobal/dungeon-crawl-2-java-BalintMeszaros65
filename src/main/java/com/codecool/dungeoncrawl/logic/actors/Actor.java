@@ -12,11 +12,16 @@ public abstract class Actor implements Drawable {
         this.cell.setActor(this);
     }
 
+    // TODO validate in sublcasses
+    public abstract boolean validateMove(int dx, int dy);
+
     public void move(int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
-        cell.setActor(null);
-        nextCell.setActor(this);
-        cell = nextCell;
+        if (validateMove(dx, dy)) {
+            Cell nextCell = cell.getNeighbor(dx, dy);
+            cell.setActor(null);
+            nextCell.setActor(this);
+            cell = nextCell;
+        }
     }
 
     public int getHealth() {

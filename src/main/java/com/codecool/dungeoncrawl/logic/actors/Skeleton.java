@@ -8,6 +8,11 @@ public class Skeleton extends Actor {
     }
 
     @Override
+    public boolean validateMove(int dx, int dy) {
+        return false;
+    }
+
+    @Override
     public String getTileName() {
         return "skeleton";
     }
