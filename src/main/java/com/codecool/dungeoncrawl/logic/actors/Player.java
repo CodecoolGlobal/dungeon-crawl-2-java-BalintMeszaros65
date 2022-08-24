@@ -23,8 +23,14 @@ public class Player extends Actor {
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        return !isNeighborActor(dx, dy) && (isNeighborCellType(dx, dy, CellType.FLOOR) ||
-                isNeighborCellType(dx, dy, CellType.DOOR));
+        boolean neighborActor = isNeighborActor(dx, dy);
+        boolean neighborCellTypeFloorOrDoor = isNeighborCellType(dx, dy, CellType.FLOOR) ||
+                isNeighborCellType(dx, dy, CellType.DOOR);
+        boolean closedDoor = false;
+        try {
+            closedDoor = "closed-door".equals(getCellNeighborItem(dx, dy).getTileName());
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
+        return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
     }
 
     // TODO monster retaliation
