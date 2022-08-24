@@ -5,7 +5,6 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Direction;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Player extends Actor {
