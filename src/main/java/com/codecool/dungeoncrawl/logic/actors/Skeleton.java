@@ -14,10 +14,6 @@ public class Skeleton extends Actor {
     }
 
     @Override
-    public void attack(int x, int y, int damage) {
-    }
-
-    @Override
     public String getTileName() {
         return "skeleton";
     }

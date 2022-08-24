@@ -6,17 +6,24 @@ import com.codecool.dungeoncrawl.logic.Drawable;
 
 public abstract class Actor implements Drawable {
     private Cell cell;
-    private int health = 10;
+    private int health;
+    private final int damage;
+    private boolean isAlive;
 
-    public Actor(Cell cell) {
+    public Actor(Cell cell, int health, int damage) {
         this.cell = cell;
         this.cell.setActor(this);
+        this.health = health;
+        this.damage = damage;
+        this.isAlive = true;
     }
 
     // TODO validate in subclasses
     public abstract boolean validateMove(int dx, int dy);
 
-    public abstract void attack(int x, int y, int damage);
+    public void attack(int dx, int dy) {
+        this.getCell().getNeighbor(dx, dy).getActor().sufferDamage(damage);
+    }
 
     public void move(int dx, int dy) {
         if (validateMove(dx, dy)) {
@@ -25,6 +32,10 @@ public abstract class Actor implements Drawable {
             nextCell.setActor(this);
             cell = nextCell;
         }
+    }
+
+    public void sufferDamage (int damage) {
+        this.health -= damage;
     }
 
     public int getHealth() {
@@ -58,4 +69,17 @@ public abstract class Actor implements Drawable {
         return nextCell.isCellType(cellType);
     }
 
+    public int getDamage() {
+        return damage;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void updateIsAlive() {
+        if (health <= 0) {
+            isAlive = false;
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.actors;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.logic.items.Sword;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
 public class Player extends Actor {
 
     // TODO inventory
-    private Map<Item, Integer> inventory;
+    private Map<String, Integer> inventory;
 
     public Player(Cell cell) {
         super(cell);
@@ -22,9 +23,10 @@ public class Player extends Actor {
     }
 
     @Override
-    public void attack(int x, int y, int damage) {
-
-    }
+    public void attack(int dx, int dy) {
+        this.getCell().getNeighbor(dx, dy).getActor().sufferDamage(
+                this.getDamage() + inventory.getOrDefault("sword", 0));
+    };
 
     public String getTileName() {
         return "player";
