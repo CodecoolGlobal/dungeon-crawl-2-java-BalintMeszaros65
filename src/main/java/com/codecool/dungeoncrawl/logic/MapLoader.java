@@ -43,10 +43,12 @@ public class MapLoader {
                             break;
                         case 'z':
                             cell.setType(CellType.FLOOR);
-                            map.setEnemy(new Zombie(cell, 2, 4));
+                            map.setEnemy(new Zombie(cell));
+                            break;
                         case 'g':
                             cell.setType(CellType.FLOOR);
-                            map.setEnemy(new Ghost(cell, 5,1 ));
+                            map.setEnemy(new Ghost(cell));
+                            break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");
                     }

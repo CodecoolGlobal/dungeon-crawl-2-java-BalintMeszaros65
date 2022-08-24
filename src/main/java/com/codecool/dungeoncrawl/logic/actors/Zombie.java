@@ -5,8 +5,8 @@ import com.codecool.dungeoncrawl.logic.Cell;
 public class Zombie extends Actor{
 
 
-    public Zombie(Cell cell, int health, int damage) {
-        super(cell, health, damage);
+    public Zombie(Cell cell) {
+        super(cell, 2, 4);
     }
 
     @Override
