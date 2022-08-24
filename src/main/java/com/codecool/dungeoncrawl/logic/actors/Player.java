@@ -2,10 +2,9 @@ package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
-import com.codecool.dungeoncrawl.logic.items.Item;
-import com.codecool.dungeoncrawl.logic.items.Sword;
+import com.codecool.dungeoncrawl.logic.Direction;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Player extends Actor {
@@ -13,8 +12,12 @@ public class Player extends Actor {
     // TODO inventory
     private Map<String, Integer> inventory;
 
+    private Direction direction;
+
     public Player(Cell cell) {
-        super(cell, 10, 1);
+        super(cell, 10, 1, 1);
+        this.direction = Direction.NORTH;
+        this.inventory = new HashMap<>();
     }
 
     @Override
@@ -39,5 +42,13 @@ public class Player extends Actor {
 
     public void setInventory(String string) {
         // TODO map inv logic
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }

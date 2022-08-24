@@ -9,9 +9,11 @@ public abstract class Actor implements Drawable {
     private int health;
     private final int damage;
     private boolean isAlive;
+    private final int distance;
 
-    public Actor(Cell cell, int health, int damage) {
+    public Actor(Cell cell, int health, int damage, int distance) {
         this.cell = cell;
+        this.distance = distance;
         this.cell.setActor(this);
         this.health = health;
         this.damage = damage;
@@ -85,5 +87,9 @@ public abstract class Actor implements Drawable {
         if (health <= 0) {
             isAlive = false;
         }
+    }
+
+    public int getDistance() {
+        return distance;
     }
 }

@@ -6,7 +6,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 public class Ghost extends Actor{
 
     public Ghost(Cell cell) {
-        super(cell, 5, 1);
+        super(cell, 5, 1, 2);
     }
 
     @Override
