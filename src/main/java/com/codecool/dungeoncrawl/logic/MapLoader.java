@@ -4,6 +4,8 @@ import com.codecool.dungeoncrawl.logic.actors.Ghost;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.Zombie;
+import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
+import com.codecool.dungeoncrawl.logic.items.Key;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -48,6 +50,14 @@ public class MapLoader {
                         case 'g':
                             cell.setType(CellType.FLOOR);
                             map.setEnemy(new Ghost(cell));
+                            break;
+                        case 'k':
+                            cell.setType(CellType.FLOOR);
+                            map.setItem(new Key(cell));
+                            break;
+                        case 'd':
+                            cell.setType(CellType.DOOR);
+                            map.setItem(new ClosedDoor(cell));
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

@@ -12,4 +12,9 @@ public class HealthPotion extends Item {
     public String getTileName() {
         return "health-potion";
     }
+
+    @Override
+    public String toString() {
+        return "Health potion";
+    }
 }
