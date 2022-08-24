@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
+import com.codecool.dungeoncrawl.logic.items.HealthPotion;
 import com.codecool.dungeoncrawl.logic.items.Item;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -66,6 +67,14 @@ public class Main extends Application {
         int playerDistance = player.getDistance();
         if (player.isAlive()) {
             switch (keyEvent.getCode()) {
+                case Q:
+                    if (player.getInventory().containsKey("health-potion")) {
+                        player.healUp(HealthPotion.getHealsAmount());
+                        player.removeInventoryItem("health-potion");
+                    }
+                    actWithEnemies();
+                    refresh();
+                    break;
                 case W:
                     if (player.validateMove(0, -playerDistance)) {
                         player.move(0, -playerDistance);

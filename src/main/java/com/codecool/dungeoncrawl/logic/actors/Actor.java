@@ -126,4 +126,8 @@ public abstract class Actor implements Drawable {
             }
         }
     }
+
+    public void healUp(int health) {
+        this.health += health;
+    }
 }
