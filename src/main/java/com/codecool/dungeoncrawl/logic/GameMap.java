@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameMap {
@@ -23,6 +24,7 @@ public class GameMap {
                 cells[x][y] = new Cell(this, x, y, defaultCellType);
             }
         }
+        this.enemies = new ArrayList<>();
     }
 
     public Cell getCell(int x, int y) {
