@@ -11,7 +11,7 @@ import java.util.Map;
 public class Player extends Actor {
 
     // TODO inventory
-    private Map<String, Integer> inventory = new HashMap<>();
+    private Map<String, Integer> inventory;
 
     private Direction direction;
 
@@ -31,7 +31,7 @@ public class Player extends Actor {
     public void attack(int dx, int dy) {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
-    };
+    }
 
     public String getTileName() {
         return "player";
@@ -43,6 +43,13 @@ public class Player extends Actor {
 
     public void setInventory(String string) {
         inventory.merge(string, 1, Integer::sum);
+    }
+
+    public void removeInventoryItem(String item) {
+        inventory.put(item, inventory.get(item) - 1);
+        if (inventory.get(item) == 0) {
+            inventory.remove(item);
+        }
     }
 
     public Direction getDirection() {

@@ -12,4 +12,9 @@ public class Coin extends Item {
     public String getTileName() {
         return "coin";
     }
+
+    @Override
+    public String toString() {
+        return "Coin";
+    }
 }

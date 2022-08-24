@@ -5,11 +5,14 @@ import com.codecool.dungeoncrawl.logic.Direction;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
+import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -192,6 +195,7 @@ public class Main extends Application {
         }
     }
 
+
     private void refresh() {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -207,18 +211,62 @@ public class Main extends Application {
                 }
             }
         }
+        fillGridPane();
+    }
+
+    private void fillGridPane() {
+        Player player = map.getPlayer();
+        ui.getChildren().clear();
         ui.add(new Label("Health:"), 0, 0);
-        ui.add(new Label(String.format("%30s", map.getPlayer().getHealth())), 0, 0);
-        Map<String, Integer> inventory = map.getPlayer().getInventory();
-        inventory.put("key1", 1);
-        inventory.put("key2", 2);
-        inventory.put("key3", 3);
+        ui.add(new Label(String.format("%30s", player.getHealth())), 0, 0);
+        Map<String, Integer> inventory = player.getInventory();
         int positionOnUI = 1;
         for (String key : inventory.keySet()) {
             String itemCount = String.format("%30s", inventory.get(key));
             ui.add(new Label(key.substring(0,1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
             ui.add(new Label(itemCount), 0, positionOnUI);
             positionOnUI++;
+        }
+        addItemButton(positionOnUI);
+        addDoorButton(positionOnUI + 1);
+
+    }
+
+    private void addItemButton(int positionOnUI) {
+        Player player = map.getPlayer();
+        if (player.getCell().hasItem()) {
+            String item = player.getCell().getItem().toString();
+            Button itemButton = new Button("Pick up " + item);
+            ui.add(itemButton, 0, positionOnUI);
+            itemButton.setOnAction(event -> {
+                player.setInventory(item);
+                player.getCell().setItem(null);
+                refresh();
+            });
+        }
+    }
+
+    private void addDoorButton(int positionOnUI) {
+        Player player = map.getPlayer();
+        int[] closedDoorPosition = new int[0];
+        if (player.getCell().getNeighbor(0,1).getItem() instanceof ClosedDoor) {
+            closedDoorPosition = new int[] {0, 1};
+        } else if (player.getCell().getNeighbor(0,-1).getItem() instanceof ClosedDoor) {
+            closedDoorPosition = new int[] {0, -1};
+        } else if (player.getCell().getNeighbor(1,0).getItem() instanceof ClosedDoor) {
+            closedDoorPosition = new int[] {1, 0};
+        } else if (player.getCell().getNeighbor(-1,0).getItem() instanceof ClosedDoor) {
+            closedDoorPosition = new int[] {-1, 0};
+        }
+        if (closedDoorPosition.length == 2 && player.getInventory().containsKey("Key")) {
+            Button doorButton = new Button("Open door!");
+            ui.add(doorButton, 0, positionOnUI);
+            int[] finalClosedDoorPosition = closedDoorPosition;
+            doorButton.setOnAction(event -> {
+                player.removeInventoryItem("Key");
+                map.getCell(finalClosedDoorPosition[0], finalClosedDoorPosition[1]).setItem(null);
+                refresh();
+            });
         }
     }
 
