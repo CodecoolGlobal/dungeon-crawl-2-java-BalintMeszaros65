@@ -13,8 +13,4 @@ public class HealthPotion extends Item {
         return "health-potion";
     }
 
-    @Override
-    public String toString() {
-        return "Health potion";
-    }
 }

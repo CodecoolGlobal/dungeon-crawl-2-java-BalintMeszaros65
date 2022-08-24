@@ -13,8 +13,4 @@ public class Key extends Item {
         return "key";
     }
 
-    @Override
-    public String toString() {
-        return "Key";
-    }
 }

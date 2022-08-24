@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
+import com.codecool.dungeoncrawl.logic.items.Item;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -234,11 +235,11 @@ public class Main extends Application {
     private void addItemButton(int positionOnUI) {
         Player player = map.getPlayer();
         if (player.getCell().hasItem()) {
-            String item = player.getCell().getItem().toString();
-            Button itemButton = new Button("Pick up " + item);
+            Item item = player.getCell().getItem();
+            Button itemButton = new Button("Pick up " + item.getTileName());
             ui.add(itemButton, 0, positionOnUI);
             itemButton.setOnAction(event -> {
-                player.setInventory(item);
+                player.setInventory(item.getTileName());
                 player.getCell().setItem(null);
                 refresh();
             });
@@ -259,12 +260,12 @@ public class Main extends Application {
                 closedDoorPosition = new int[]{-1, 0};
             }
         } catch (IndexOutOfBoundsException ignore) {}
-        if (closedDoorPosition.length == 2 && player.getInventory().containsKey("Key")) {
+        if (closedDoorPosition.length == 2 && player.getInventory().containsKey("key")) {
             Button doorButton = new Button("Open door!");
             ui.add(doorButton, 0, positionOnUI);
             int[] finalClosedDoorPosition = closedDoorPosition;
             doorButton.setOnAction(event -> {
-                player.removeInventoryItem("Key");
+                player.removeInventoryItem("key");
                 map.getCell(player.getX() + finalClosedDoorPosition[0],
                         player.getY() + finalClosedDoorPosition[1]).setItem(null);
                 refresh();
