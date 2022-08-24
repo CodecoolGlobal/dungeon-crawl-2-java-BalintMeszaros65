@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 
 public abstract class Actor implements Drawable {
@@ -39,4 +40,20 @@ public abstract class Actor implements Drawable {
     public int getY() {
         return cell.getY();
     }
+
+    public boolean isNeighborActor (int dx, int dy) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
+        return nextCell.hasActor();
+    }
+
+    public boolean isNeighborItem (int dx, int dy) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
+        return nextCell.hasItem();
+    }
+
+    public boolean isNeighborCellType (int dx, int dy, CellType cellType) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
+        return nextCell.isCellType(cellType);
+    }
+
 }
