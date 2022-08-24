@@ -60,74 +60,116 @@ public class Main extends Application {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
+        Player player = map.getPlayer();
+        int playerDistance = player.getDistance();
         switch (keyEvent.getCode()) {
             // TODO move validation (instance of?)
             // TODO pickup item (mouseclick)
             case W:
-                map.getPlayer().move(0, -1);
-                moveEnemies();
+                player.move(0, -playerDistance);
+                player.setDirection(Direction.NORTH);
+                actWithEnemies();
                 refresh();
                 break;
             case S:
-                map.getPlayer().move(0, 1);
-                moveEnemies();
+                player.move(0, playerDistance);
+                player.setDirection(Direction.SOUTH);
+                actWithEnemies();
                 refresh();
                 break;
             case A:
-                map.getPlayer().move(-1, 0);
-                moveEnemies();
+                player.move(-playerDistance, 0);
+                player.setDirection(Direction.WEST);
+                actWithEnemies();
                 refresh();
                 break;
             case D:
-                map.getPlayer().move(1,0);
-                moveEnemies();
+                player.move(playerDistance,0);
+                player.setDirection(Direction.EAST);
+                actWithEnemies();
                 refresh();
                 break;
             case SPACE:
-                // TODO attack
-                moveEnemies();
+                switch (player.getDirection()) {
+                    case NORTH:
+                        if (player.isNeighborActor(0, -1)) {
+                            player.attack(0, -1);
+                        }
+                        break;
+                    case SOUTH:
+                        if (player.isNeighborActor(0, 1)) {
+                            player.attack(0, 1);
+                        }
+                        break;
+                    case WEST:
+                        if (player.isNeighborActor(-1, 0)) {
+                            player.attack(-1, 0);
+                        }
+                        break;
+                    case EAST:
+                        if (player.isNeighborActor(1, 0)) {
+                            player.attack(1, 0);
+                        }
+                        break;
+                }
+                actWithEnemies();
                 refresh();
                 break;
         }
     }
 
-    private void moveEnemies() {
+    private void actWithEnemies() {
         // TODO enemy checking neighbors for player + if true damage
         // TODO enemy movement method
         List<Actor> enemies = map.getEnemies();
         if (enemies != null) {
             for (Actor enemy : enemies) {
                 if (enemy instanceof Skeleton) {
-                    moveSkeleton(enemy);
+                    actWithSkeleton(enemy);
+                } else if (enemy instanceof Ghost) {
+                    actWithGhost(enemy);
                 }
             }
         }
     }
 
-    private void moveSkeleton(Actor skeleton) {
+    private void actWithSkeleton(Actor skeleton) {
         int dx = 0;
         int dy = 0;
+        int skeletonDistance = skeleton.getDistance();
         if (randInt(0, 1) == 0) {
             if (randInt(0, 1) == 0) {
-                dx = 1;
+                dx = skeletonDistance;
             } else {
-                dx = -1;
+                dx = -skeletonDistance;
             }
         } else {
             if (randInt(0, 1) == 0) {
-                dy = 1;
+                dy = skeletonDistance;
             } else {
-                dy = -1;
+                dy = -skeletonDistance;
             }
         }
-        if (skeleton.isNeighborActor(dx, dy)) {
-            if (skeleton.getCellNeighborActor(dx, dy) instanceof Player) {
-                skeleton.attack(dx, dy);
+        actWithEnemy(skeleton, dx, dy);
+
+    }
+
+    private void actWithGhost(Actor ghost) {
+        int ghostDistance = ghost.getDistance();
+        int dx = randInt(-ghostDistance, ghostDistance);
+        int dy = randInt(-ghostDistance, ghostDistance);
+        actWithEnemy(ghost, dx, dy);
+    }
+
+    private void actWithEnemy(Actor enemy, int dx, int dy) {
+        if (enemy.isNeighborActor(dx, dy)) {
+            if (enemy.getCellNeighborActor(dx, dy) instanceof Player) {
+                enemy.attack(dx, dy);
             } else {
-                skeleton.move(dx, dy);
+                enemy.move(dx, dy);
             }
         } else {
-            skeleton.move(dx, dy);
+            enemy.move(dx, dy);
         }
     }
 

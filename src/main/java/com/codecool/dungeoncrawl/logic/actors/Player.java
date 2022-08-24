@@ -28,7 +28,7 @@ public class Player extends Actor {
     // TODO monster retaliation
     @Override
     public void attack(int dx, int dy) {
-        this.getCell().getNeighbor(dx, dy).getActor().sufferDamage(
+        this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
     };
 
