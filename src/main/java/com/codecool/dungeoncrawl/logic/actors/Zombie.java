@@ -1,7 +1,6 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.CellType;
 
 public class Zombie extends Actor{
 
@@ -12,8 +11,7 @@ public class Zombie extends Actor{
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        Cell nextCell = this.getCell().getNeighbor(dx, dy);
-        return !nextCell.isCellType(CellType.WALL) && !nextCell.hasActor() && !nextCell.hasItem();
+        return true; // bc zombies doesn't move;
     }
 
     @Override
