@@ -23,7 +23,8 @@ public class Player extends Actor {
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        return !isNeighborActor(dx, dy) && isNeighborCellType(dx, dy, CellType.FLOOR);
+        return !isNeighborActor(dx, dy) && (isNeighborCellType(dx, dy, CellType.FLOOR) ||
+                isNeighborCellType(dx, dy, CellType.DOOR));
     }
 
     // TODO monster retaliation
