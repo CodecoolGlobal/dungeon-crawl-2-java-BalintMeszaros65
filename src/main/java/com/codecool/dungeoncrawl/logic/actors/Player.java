@@ -11,7 +11,7 @@ import java.util.Map;
 public class Player extends Actor {
 
     // TODO inventory
-    private Map<String, Integer> inventory;
+    private Map<String, Integer> inventory = new HashMap<>();
 
     private Direction direction;
 
@@ -42,7 +42,7 @@ public class Player extends Actor {
     }
 
     public void setInventory(String string) {
-        // TODO map inv logic
+        inventory.merge(string, 1, Integer::sum);
     }
 
     public Direction getDirection() {
