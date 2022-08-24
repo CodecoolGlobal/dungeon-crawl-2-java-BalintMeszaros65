@@ -4,10 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.Direction;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
-import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.Ghost;
-import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.actors.Skeleton;
+import com.codecool.dungeoncrawl.logic.actors.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -128,6 +125,8 @@ public class Main extends Application {
                     actWithSkeleton(enemy);
                 } else if (enemy instanceof Ghost) {
                     actWithGhost(enemy);
+                } else if (enemy instanceof Zombie) {
+                    actWithZombie(enemy);
                 }
             }
         }
@@ -159,6 +158,16 @@ public class Main extends Application {
         int dx = randInt(-ghostDistance, ghostDistance);
         int dy = randInt(-ghostDistance, ghostDistance);
         actWithEnemy(ghost, dx, dy);
+    }
+
+    private void actWithZombie(Actor zombie) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i != 0 || j != 0) {
+                    actWithEnemy(zombie, - i, - j);
+                }
+            }
+        }
     }
 
     private void actWithEnemy(Actor enemy, int dx, int dy) {

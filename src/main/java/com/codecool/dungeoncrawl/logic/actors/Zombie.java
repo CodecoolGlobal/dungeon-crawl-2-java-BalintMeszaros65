@@ -11,7 +11,7 @@ public class Zombie extends Actor{
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        return true; // bc zombies doesn't move;
+        return false; // bc zombies doesn't move;
     }
 
     @Override
