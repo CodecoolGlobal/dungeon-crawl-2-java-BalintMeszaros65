@@ -33,6 +33,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        context.translate(map.getPlayer().getX() * Tiles.TILE_WIDTH, (map.getPlayer().getY() - 2) * Tiles.TILE_WIDTH * -1);
+        context.setImageSmoothing(false);
+        context.scale(1.5, 1.5);
+
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
@@ -59,21 +63,25 @@ public class Main extends Application {
             // TODO move validation (instance of?)
             // TODO pickup item (mouseclick)
             case W:
+                context.translate(0, Tiles.TILE_WIDTH);
                 map.getPlayer().move(0, -1);
                 moveEnemies();
                 refresh();
                 break;
             case S:
+                context.translate(0, -Tiles.TILE_WIDTH);
                 map.getPlayer().move(0, 1);
                 moveEnemies();
                 refresh();
                 break;
             case A:
+                context.translate(Tiles.TILE_WIDTH, 0);
                 map.getPlayer().move(-1, 0);
                 moveEnemies();
                 refresh();
                 break;
             case D:
+                context.translate(-Tiles.TILE_WIDTH, 0);
                 map.getPlayer().move(1,0);
                 moveEnemies();
                 refresh();
@@ -115,7 +123,7 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+        healthLabel.setText("Health: " + map.getPlayer().getHealth());
     }
 
     // TODO randint
