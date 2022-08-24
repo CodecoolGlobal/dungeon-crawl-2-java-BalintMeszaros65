@@ -100,21 +100,25 @@ public class Main extends Application {
                         case NORTH:
                             if (player.isNeighborActor(0, -1)) {
                                 player.attack(0, -1);
+                                retaliation(player, Direction.NORTH);
                             }
                             break;
                         case SOUTH:
                             if (player.isNeighborActor(0, 1)) {
                                 player.attack(0, 1);
+                                retaliation(player, Direction.SOUTH);
                             }
                             break;
                         case WEST:
                             if (player.isNeighborActor(-1, 0)) {
                                 player.attack(-1, 0);
+                                retaliation(player, Direction.WEST);
                             }
                             break;
                         case EAST:
                             if (player.isNeighborActor(1, 0)) {
                                 player.attack(1, 0);
+                                retaliation(player, Direction.EAST);
                             }
                             break;
                     }
@@ -123,6 +127,40 @@ public class Main extends Application {
                     break;
             }
             player.updateIsAlive();
+        }
+    }
+
+    private void retaliation(Player player, Direction direction) {
+        Actor enemy;
+        switch (direction) {
+            case NORTH:
+                enemy = player.getCellNeighborActor(0, -1);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
+                break;
+            case SOUTH:
+                enemy = player.getCellNeighborActor(0, 1);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
+                break;
+            case WEST:
+                enemy = player.getCellNeighborActor(-1, 0);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
+                break;
+            case EAST:
+                enemy = player.getCellNeighborActor(1, 0);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
+                break;
         }
     }
 
