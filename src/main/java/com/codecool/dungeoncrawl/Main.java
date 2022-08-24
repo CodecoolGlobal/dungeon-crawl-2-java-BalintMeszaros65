@@ -61,25 +61,33 @@ public class Main extends Application {
             // TODO move validation (instance of?)
             // TODO pickup item (mouseclick)
             case W:
-                player.move(0, -playerDistance);
+                if (player.validateMove(0, -playerDistance)) {
+                    player.move(0, -playerDistance);
+                }
                 player.setDirection(Direction.NORTH);
                 actWithEnemies();
                 refresh();
                 break;
             case S:
-                player.move(0, playerDistance);
+                if (player.validateMove(0, playerDistance)) {
+                    player.move(0, playerDistance);
+                }
                 player.setDirection(Direction.SOUTH);
                 actWithEnemies();
                 refresh();
                 break;
             case A:
-                player.move(-playerDistance, 0);
+                if (player.validateMove(-playerDistance, 0)) {
+                    player.move(-playerDistance, 0);
+                }
                 player.setDirection(Direction.WEST);
                 actWithEnemies();
                 refresh();
                 break;
             case D:
-                player.move(playerDistance,0);
+                if (player.validateMove(playerDistance, 0)) {
+                    player.move(playerDistance, 0);
+                }
                 player.setDirection(Direction.EAST);
                 actWithEnemies();
                 refresh();
@@ -164,6 +172,22 @@ public class Main extends Application {
                 if (i != 0 || j != 0) {
                     actWithEnemy(zombie, - i, - j);
                 }
+            }
+        }
+    }
+
+    private void actWithEnemy(Actor enemy, int dx, int dy) {
+        if (enemy.isNeighborActor(dx, dy)) {
+            if (enemy.getCellNeighborActor(dx, dy) instanceof Player) {
+                enemy.attack(dx, dy);
+            } else {
+                if (enemy.validateMove(dx, dy)) {
+                    enemy.move(dx, dy);
+                }
+            }
+        } else {
+            if (enemy.validateMove(dx, dy)) {
+                enemy.move(dx, dy);
             }
         }
     }
