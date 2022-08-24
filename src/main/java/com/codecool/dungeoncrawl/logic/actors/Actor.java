@@ -22,7 +22,11 @@ public abstract class Actor implements Drawable {
     public abstract boolean validateMove(int dx, int dy);
 
     public void attack(int dx, int dy) {
-        this.getCell().getNeighbor(dx, dy).getActor().sufferDamage(damage);
+        getCellNeighborActor(dx, dy).sufferDamage(damage);
+    }
+
+    public Actor getCellNeighborActor(int dx, int dy) {
+       return this.getCell().getNeighborActor(dx, dy);
     }
 
     public void move(int dx, int dy) {

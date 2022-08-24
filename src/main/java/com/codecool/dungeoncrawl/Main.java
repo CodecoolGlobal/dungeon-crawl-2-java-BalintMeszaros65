@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -95,10 +96,36 @@ public class Main extends Application {
         if (enemies != null) {
             for (Actor enemy : enemies) {
                 if (enemy instanceof Skeleton) {
-                    // enemy.move
-
+                    moveSkeleton(enemy);
                 }
             }
+        }
+    }
+
+    private void moveSkeleton(Actor skeleton) {
+        int dx = 0;
+        int dy = 0;
+        if (randInt(0, 1) == 0) {
+            if (randInt(0, 1) == 0) {
+                dx = 1;
+            } else {
+                dx = -1;
+            }
+        } else {
+            if (randInt(0, 1) == 0) {
+                dy = 1;
+            } else {
+                dy = -1;
+            }
+        }
+        if (skeleton.isNeighborActor(dx, dy)) {
+            if (skeleton.getCellNeighborActor(dx, dy) instanceof Player) {
+                skeleton.attack(dx, dy);
+            } else {
+                skeleton.move(dx, dy);
+            }
+        } else {
+            skeleton.move(dx, dy);
         }
     }
 
