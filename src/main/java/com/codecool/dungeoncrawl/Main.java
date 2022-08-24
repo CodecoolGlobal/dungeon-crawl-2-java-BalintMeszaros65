@@ -225,7 +225,8 @@ public class Main extends Application {
             int[] finalClosedDoorPosition = closedDoorPosition;
             doorButton.setOnAction(event -> {
                 player.removeInventoryItem("Key");
-                map.getCell(finalClosedDoorPosition[0], finalClosedDoorPosition[1]).setItem(null);
+                map.getCell(player.getX() + finalClosedDoorPosition[0],
+                        player.getY() + finalClosedDoorPosition[1]).setItem(null);
                 refresh();
             });
         }
