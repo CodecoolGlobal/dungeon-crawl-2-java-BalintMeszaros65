@@ -6,18 +6,18 @@ import com.codecool.dungeoncrawl.logic.CellType;
 public class Zombie extends Actor{
 
 
-    public Zombie(Cell cell) {
-        super(cell);
+    public Zombie(Cell cell, int health, int damage) {
+        super(cell, health, damage);
     }
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        Cell nextCell = super.getCell().getNeighbor(dx, dy);
+        Cell nextCell = this.getCell().getNeighbor(dx, dy);
         return !nextCell.isCellType(CellType.WALL) && !nextCell.hasActor() && !nextCell.hasItem();
     }
 
     @Override
     public String getTileName() {
-        return null;
+        return "zombie";
     }
 }

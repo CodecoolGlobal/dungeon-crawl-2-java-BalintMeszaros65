@@ -5,13 +5,13 @@ import com.codecool.dungeoncrawl.logic.CellType;
 
 public class Ghost extends Actor{
 
-    public Ghost(Cell cell) {
-        super(cell);
+    public Ghost(Cell cell, int health, int damage) {
+        super(cell, health, damage);
     }
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        Cell nextCell = super.getCell().getNeighbor(dx, dy);
+        Cell nextCell = this.getCell().getNeighbor(dx, dy);
         return !nextCell.isCellType(CellType.EMPTY) && !nextCell.hasActor() && !nextCell.hasItem();
     }
 
