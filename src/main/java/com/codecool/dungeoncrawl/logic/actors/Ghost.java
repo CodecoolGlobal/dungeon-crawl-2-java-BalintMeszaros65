@@ -11,7 +11,12 @@ public class Ghost extends Actor{
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        Cell nextCell = this.getCell().getNeighbor(dx, dy);
+        Cell nextCell;
+        try {
+            nextCell = this.getCell().getNeighbor(dx, dy);
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            return false;
+        }
         return !nextCell.isCellType(CellType.EMPTY) && !nextCell.hasActor() && !nextCell.hasItem();
     }
 
