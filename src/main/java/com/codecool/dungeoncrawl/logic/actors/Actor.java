@@ -31,6 +31,10 @@ public abstract class Actor implements Drawable {
        return this.getCell().getNeighborActor(dx, dy);
     }
 
+    public Item getCellNeighborItem(int dx, int dy) {
+        return this.getCell().getNeighborItem(dx, dy);
+    }
+
     public void move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
         cell.setActor(null);
