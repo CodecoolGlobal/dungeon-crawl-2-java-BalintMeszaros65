@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 
 public class Skeleton extends Actor {
     public Skeleton(Cell cell) {
@@ -9,7 +10,7 @@ public class Skeleton extends Actor {
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        return false;
+        return !isNeighborActor(dx, dy) && !isNeighborItem(dy, dy) && isNeighborCellType(dx, dy, CellType.FLOOR);
     }
 
     @Override

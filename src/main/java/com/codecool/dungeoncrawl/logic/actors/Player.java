@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.items.Item;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class Player extends Actor {
 
     @Override
     public boolean validateMove(int dx, int dy) {
-        return false;
+        return !isNeighborActor(dx, dy) && isNeighborCellType(dx, dy, CellType.FLOOR);
     }
 
     public String getTileName() {
