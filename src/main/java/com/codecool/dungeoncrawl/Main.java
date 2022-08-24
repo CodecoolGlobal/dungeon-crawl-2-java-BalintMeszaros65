@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+// TODO sounds
+// TODO map
+// TODO zoom
 public class Main extends Application {
     static Random random = new Random();
     GameMap map = MapLoader.loadMap();
@@ -63,7 +66,6 @@ public class Main extends Application {
         int playerDistance = player.getDistance();
         if (player.isAlive()) {
             switch (keyEvent.getCode()) {
-                // TODO pickup item (mouseclick)
                 case W:
                     if (player.validateMove(0, -playerDistance)) {
                         player.move(0, -playerDistance);

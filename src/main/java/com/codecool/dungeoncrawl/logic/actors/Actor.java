@@ -5,7 +5,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 import com.codecool.dungeoncrawl.logic.items.Item;
 
-// TODO public / private methods
+
 public abstract class Actor implements Drawable {
     private Cell cell;
     private int health;

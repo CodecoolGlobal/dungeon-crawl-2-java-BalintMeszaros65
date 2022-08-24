@@ -7,9 +7,12 @@ import com.codecool.dungeoncrawl.logic.Direction;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO different print if it has shield
+// TODO score
 public class Player extends Actor {
 
-    // TODO inventory
+    // TODO name
+    // TODO validation based on name
     private Map<String, Integer> inventory;
 
     private Direction direction;
@@ -32,7 +35,6 @@ public class Player extends Actor {
         return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
     }
 
-    // TODO monster retaliation
     @Override
     public void attack(int dx, int dy) {
         this.getCellNeighborActor(dx, dy).sufferDamage(
