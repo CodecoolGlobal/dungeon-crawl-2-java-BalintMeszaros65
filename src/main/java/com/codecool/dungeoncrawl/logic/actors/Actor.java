@@ -69,12 +69,22 @@ public abstract class Actor implements Drawable {
     }
 
     public boolean isNeighborItem (int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
+        Cell nextCell;
+        try {
+            nextCell = cell.getNeighbor(dx, dy);
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            return false;
+        }
         return nextCell.hasItem();
     }
 
     public boolean isNeighborCellType (int dx, int dy, CellType cellType) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
+        Cell nextCell;
+        try {
+            nextCell = cell.getNeighbor(dx, dy);
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            return false;
+        }
         return nextCell.isCellType(cellType);
     }
 

@@ -50,6 +50,10 @@ public class Cell implements Drawable {
         return gameMap.getCell(x + dx, y + dy).getActor();
     }
 
+    public Item getNeighborItem (int dx, int dy) {
+        return gameMap.getCell(x + dx, y + dy).getItem();
+    }
+
     @Override
     public String getTileName() {
         return type.getTileName();

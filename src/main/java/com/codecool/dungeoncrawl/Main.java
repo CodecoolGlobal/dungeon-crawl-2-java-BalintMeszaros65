@@ -248,15 +248,17 @@ public class Main extends Application {
     private void addDoorButton(int positionOnUI) {
         Player player = map.getPlayer();
         int[] closedDoorPosition = new int[0];
-        if (player.getCell().getNeighbor(0,1).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {0, 1};
-        } else if (player.getCell().getNeighbor(0,-1).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {0, -1};
-        } else if (player.getCell().getNeighbor(1,0).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {1, 0};
-        } else if (player.getCell().getNeighbor(-1,0).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {-1, 0};
-        }
+        try {
+            if (player.getCell().getNeighborItem(0, 1) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{0, 1};
+            } else if (player.getCell().getNeighborItem(0, -1) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{0, -1};
+            } else if (player.getCell().getNeighborItem(1, 0) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{1, 0};
+            } else if (player.getCell().getNeighborItem(-1, 0) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{-1, 0};
+            }
+        } catch (IndexOutOfBoundsException ignore) {}
         if (closedDoorPosition.length == 2 && player.getInventory().containsKey("Key")) {
             Button doorButton = new Button("Open door!");
             ui.add(doorButton, 0, positionOnUI);
