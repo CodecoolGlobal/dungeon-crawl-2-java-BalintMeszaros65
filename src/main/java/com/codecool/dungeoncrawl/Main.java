@@ -20,7 +20,10 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class Main extends Application {
-    GameMap map = MapLoader.loadMap("map2");
+    GameMap map1 = MapLoader.loadMap("map1");
+    GameMap map2 = MapLoader.loadMap("map2");
+    GameMap map3 = MapLoader.loadMap("map3");
+    GameMap map = map1;
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
@@ -33,10 +36,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        context.translate(map.getPlayer().getX() * Tiles.TILE_WIDTH, (map.getPlayer().getY() - 2) * Tiles.TILE_WIDTH * -1);
-        context.setImageSmoothing(false);
-        context.scale(1.5, 1.5);
-
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
@@ -63,31 +62,22 @@ public class Main extends Application {
             // TODO move validation (instance of?)
             // TODO pickup item (mouseclick)
             case W:
-                context.translate(0, Tiles.TILE_WIDTH);
                 map.getPlayer().move(0, -1);
                 moveEnemies();
                 refresh();
                 break;
             case S:
-                context.translate(0, -Tiles.TILE_WIDTH);
                 map.getPlayer().move(0, 1);
                 moveEnemies();
                 refresh();
                 break;
             case A:
-                context.translate(Tiles.TILE_WIDTH, 0);
                 map.getPlayer().move(-1, 0);
                 moveEnemies();
                 refresh();
                 break;
             case D:
-                context.translate(-Tiles.TILE_WIDTH, 0);
                 map.getPlayer().move(1,0);
-                moveEnemies();
-                refresh();
-                break;
-            case SPACE:
-                // TODO attack
                 moveEnemies();
                 refresh();
                 break;
@@ -109,6 +99,7 @@ public class Main extends Application {
     }
 
     private void refresh() {
+        changeMap();
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -124,6 +115,31 @@ public class Main extends Application {
             }
         }
         healthLabel.setText("Health: " + map.getPlayer().getHealth());
+    }
+
+    private void changeMap() {
+        int prevHealth;
+        if (map.getPlayer().getCell().getTileName().equals("stairs-up")) {
+            if (this.map.equals(map2)) {
+                prevHealth = this.map.getPlayer().getHealth();
+                this.map = map1;
+                this.map.getPlayer().setHealth(prevHealth);
+            } else if (this.map.equals(map3)) {
+                prevHealth = this.map.getPlayer().getHealth();
+                this.map = map2;
+                this.map.getPlayer().setHealth(prevHealth);
+            }
+        } else if (map.getPlayer().getCell().getTileName().equals("stairs-down")) {
+            if (this.map.equals(map1)) {
+                prevHealth = this.map.getPlayer().getHealth();
+                this.map = map2;
+                this.map.getPlayer().setHealth(prevHealth);
+            } else if (this.map.equals(map2)) {
+                prevHealth = this.map.getPlayer().getHealth();
+                this.map = map3;
+                this.map.getPlayer().setHealth(prevHealth);
+            }
+        }
     }
 
     // TODO randint
