@@ -5,7 +5,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 
 public class Skeleton extends Actor {
     public Skeleton(Cell cell) {
-        super(cell);
+        super(cell, 6, 2);
     }
 
     @Override

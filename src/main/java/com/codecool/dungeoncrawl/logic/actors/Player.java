@@ -14,7 +14,7 @@ public class Player extends Actor {
     private Map<String, Integer> inventory;
 
     public Player(Cell cell) {
-        super(cell);
+        super(cell, 10, 1);
     }
 
     @Override
@@ -22,6 +22,7 @@ public class Player extends Actor {
         return !isNeighborActor(dx, dy) && isNeighborCellType(dx, dy, CellType.FLOOR);
     }
 
+    // TODO monster retaliation
     @Override
     public void attack(int dx, int dy) {
         this.getCell().getNeighbor(dx, dy).getActor().sufferDamage(
@@ -32,11 +33,11 @@ public class Player extends Actor {
         return "player";
     }
 
-    public Map<Item, Integer> getInventory() {
+    public Map<String, Integer> getInventory() {
         return inventory;
     }
 
-    public void setInventory(Item item) {
+    public void setInventory(String string) {
         // TODO map inv logic
     }
 }
