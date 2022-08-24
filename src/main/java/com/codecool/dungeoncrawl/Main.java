@@ -18,8 +18,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Random;
 
 public class Main extends Application {
+    static Random random = new Random();
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
@@ -118,5 +120,7 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
 
-    // TODO randint
+    public static int randInt(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
+    }
 }
