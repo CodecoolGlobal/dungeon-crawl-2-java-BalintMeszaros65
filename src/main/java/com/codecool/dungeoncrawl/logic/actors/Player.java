@@ -3,16 +3,18 @@ package com.codecool.dungeoncrawl.logic.actors;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.items.Item;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Player extends Actor {
 
     // TODO inventory
-    private Map<Item, Integer> inventory;
+    private Map<String, Integer> inventory;
 
     public Player(Cell cell) {
         super(cell);
+        this.inventory = new HashMap<>();
     }
 
     @Override
@@ -24,7 +26,7 @@ public class Player extends Actor {
         return "player";
     }
 
-    public Map<Item, Integer> getInventory() {
+    public Map<String, Integer> getInventory() {
         return inventory;
     }
 

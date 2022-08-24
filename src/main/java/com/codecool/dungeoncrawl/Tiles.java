@@ -30,6 +30,10 @@ public class Tiles {
         tileMap.put("skeleton", new Tile(29, 6));
         tileMap.put("open-door", new Tile(1, 9));
         tileMap.put("closed-door", new Tile(2, 9));
+        tileMap.put("sword", new Tile(4, 32));
+        tileMap.put("coin", new Tile(22, 4));
+        tileMap.put("health-potion", new Tile(23, 23));
+        tileMap.put("key", new Tile(18, 23));
     }
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {

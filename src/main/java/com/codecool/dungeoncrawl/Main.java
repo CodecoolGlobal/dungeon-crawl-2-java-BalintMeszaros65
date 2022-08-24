@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Map;
 
 public class Main extends Application {
     GameMap map = MapLoader.loadMap();
@@ -25,7 +26,7 @@ public class Main extends Application {
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
-    Label healthLabel = new Label();
+    GridPane ui = new GridPane();
 
     public static void main(String[] args) {
         launch(args);
@@ -33,12 +34,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
-
-        ui.add(new Label("Health: "), 0, 0);
-        ui.add(healthLabel, 1, 0);
 
         BorderPane borderPane = new BorderPane();
 
@@ -53,6 +50,7 @@ public class Main extends Application {
         primaryStage.setTitle("Platypus Crawl");
         primaryStage.show();
     }
+
 
     private void onKeyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
@@ -115,7 +113,19 @@ public class Main extends Application {
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
+        ui.add(new Label("Health:"), 0, 0);
+        ui.add(new Label(String.format("%30s", map.getPlayer().getHealth())), 0, 0);
+        Map<String, Integer> inventory = map.getPlayer().getInventory();
+        inventory.put("key1", 1);
+        inventory.put("key2", 2);
+        inventory.put("key3", 3);
+        int positionOnUI = 1;
+        for (String key : inventory.keySet()) {
+            String itemCount = String.format("%30s", inventory.get(key));
+            ui.add(new Label(key.substring(0,1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
+            ui.add(new Label(itemCount), 0, positionOnUI);
+            positionOnUI++;
+        }
     }
 
     // TODO randint
