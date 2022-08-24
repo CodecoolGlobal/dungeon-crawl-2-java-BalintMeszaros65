@@ -16,6 +16,8 @@ public abstract class Actor implements Drawable {
     // TODO validate in subclasses
     public abstract boolean validateMove(int dx, int dy);
 
+    public abstract boolean attack(int x, int y, int damage);
+
     public void move(int dx, int dy) {
         if (validateMove(dx, dy)) {
             Cell nextCell = cell.getNeighbor(dx, dy);
