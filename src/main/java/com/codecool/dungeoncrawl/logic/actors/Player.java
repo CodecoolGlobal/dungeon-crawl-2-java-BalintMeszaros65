@@ -21,6 +21,11 @@ public class Player extends Actor {
         return !isNeighborActor(dx, dy) && isNeighborCellType(dx, dy, CellType.FLOOR);
     }
 
+    @Override
+    public void attack(int x, int y, int damage) {
+
+    }
+
     public String getTileName() {
         return "player";
     }
