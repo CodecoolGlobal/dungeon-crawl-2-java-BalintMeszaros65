@@ -1,19 +1,35 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 
 public abstract class Actor implements Drawable {
     private Cell cell;
-    private int health = 10;
+    private int health;
+    private final int damage;
+    private boolean isAlive;
+    private final int distance;
 
-    public Actor(Cell cell) {
+    public Actor(Cell cell, int health, int damage, int distance) {
         this.cell = cell;
+        this.distance = distance;
         this.cell.setActor(this);
+        this.health = health;
+        this.damage = damage;
+        this.isAlive = true;
     }
 
     // TODO validate in subclasses
     public abstract boolean validateMove(int dx, int dy);
+
+    public void attack(int dx, int dy) {
+        getCellNeighborActor(dx, dy).sufferDamage(damage);
+    }
+
+    public Actor getCellNeighborActor(int dx, int dy) {
+       return this.getCell().getNeighborActor(dx, dy);
+    }
 
     public void move(int dx, int dy) {
         if (validateMove(dx, dy)) {
@@ -22,6 +38,10 @@ public abstract class Actor implements Drawable {
             nextCell.setActor(this);
             cell = nextCell;
         }
+    }
+
+    public void sufferDamage (int damage) {
+        this.health -= damage;
     }
 
     public int getHealth() {
@@ -38,5 +58,43 @@ public abstract class Actor implements Drawable {
 
     public int getY() {
         return cell.getY();
+    }
+
+    public boolean isNeighborActor (int dx, int dy) {
+        Cell nextCell;
+        try {
+           nextCell = cell.getNeighbor(dx, dy);
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            return false;
+        }
+        return nextCell.hasActor();
+    }
+
+    public boolean isNeighborItem (int dx, int dy) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
+        return nextCell.hasItem();
+    }
+
+    public boolean isNeighborCellType (int dx, int dy, CellType cellType) {
+        Cell nextCell = cell.getNeighbor(dx, dy);
+        return nextCell.isCellType(cellType);
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void updateIsAlive() {
+        if (health <= 0) {
+            isAlive = false;
+        }
+    }
+
+    public int getDistance() {
+        return distance;
     }
 }

@@ -1,10 +1,10 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.Direction;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
-import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.Skeleton;
+import com.codecool.dungeoncrawl.logic.actors.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -18,9 +18,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Map;
 
 public class Main extends Application {
+    static Random random = new Random();
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
@@ -53,46 +55,114 @@ public class Main extends Application {
 
 
     private void onKeyPressed(KeyEvent keyEvent) {
+        Player player = map.getPlayer();
+        int playerDistance = player.getDistance();
         switch (keyEvent.getCode()) {
             // TODO move validation (instance of?)
             // TODO pickup item (mouseclick)
             case W:
-                map.getPlayer().move(0, -1);
-                moveEnemies();
+                player.move(0, -playerDistance);
+                player.setDirection(Direction.NORTH);
+                actWithEnemies();
                 refresh();
                 break;
             case S:
-                map.getPlayer().move(0, 1);
-                moveEnemies();
+                player.move(0, playerDistance);
+                player.setDirection(Direction.SOUTH);
+                actWithEnemies();
                 refresh();
                 break;
             case A:
-                map.getPlayer().move(-1, 0);
-                moveEnemies();
+                player.move(-playerDistance, 0);
+                player.setDirection(Direction.WEST);
+                actWithEnemies();
                 refresh();
                 break;
             case D:
-                map.getPlayer().move(1,0);
-                moveEnemies();
+                player.move(playerDistance,0);
+                player.setDirection(Direction.EAST);
+                actWithEnemies();
                 refresh();
                 break;
             case SPACE:
-                // TODO attack
-                moveEnemies();
+                switch (player.getDirection()) {
+                    case NORTH:
+                        if (player.isNeighborActor(0, -1)) {
+                            player.attack(0, -1);
+                        }
+                        break;
+                    case SOUTH:
+                        if (player.isNeighborActor(0, 1)) {
+                            player.attack(0, 1);
+                        }
+                        break;
+                    case WEST:
+                        if (player.isNeighborActor(-1, 0)) {
+                            player.attack(-1, 0);
+                        }
+                        break;
+                    case EAST:
+                        if (player.isNeighborActor(1, 0)) {
+                            player.attack(1, 0);
+                        }
+                        break;
+                }
+                actWithEnemies();
                 refresh();
                 break;
         }
     }
 
-    private void moveEnemies() {
+    private void actWithEnemies() {
         // TODO enemy checking neighbors for player + if true damage
         // TODO enemy movement method
         List<Actor> enemies = map.getEnemies();
         if (enemies != null) {
             for (Actor enemy : enemies) {
                 if (enemy instanceof Skeleton) {
-                    // enemy.move
+                    actWithSkeleton(enemy);
+                } else if (enemy instanceof Ghost) {
+                    actWithGhost(enemy);
+                } else if (enemy instanceof Zombie) {
+                    actWithZombie(enemy);
+                }
+            }
+        }
+    }
 
+    private void actWithSkeleton(Actor skeleton) {
+        int dx = 0;
+        int dy = 0;
+        int skeletonDistance = skeleton.getDistance();
+        if (randInt(0, 1) == 0) {
+            if (randInt(0, 1) == 0) {
+                dx = skeletonDistance;
+            } else {
+                dx = -skeletonDistance;
+            }
+        } else {
+            if (randInt(0, 1) == 0) {
+                dy = skeletonDistance;
+            } else {
+                dy = -skeletonDistance;
+            }
+        }
+        actWithEnemy(skeleton, dx, dy);
+
+    }
+
+    private void actWithGhost(Actor ghost) {
+        int ghostDistance = ghost.getDistance();
+        int dx = randInt(-ghostDistance, ghostDistance);
+        int dy = randInt(-ghostDistance, ghostDistance);
+        actWithEnemy(ghost, dx, dy);
+    }
+
+    private void actWithZombie(Actor zombie) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i != 0 || j != 0) {
+                    actWithEnemy(zombie, - i, - j);
                 }
             }
         }
@@ -128,5 +198,7 @@ public class Main extends Application {
         }
     }
 
-    // TODO randint
+    public static int randInt(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
+    }
 }
