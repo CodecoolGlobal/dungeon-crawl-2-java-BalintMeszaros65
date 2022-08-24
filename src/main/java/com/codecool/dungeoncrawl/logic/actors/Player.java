@@ -30,7 +30,7 @@ public class Player extends Actor {
     public void attack(int dx, int dy) {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
-    };
+    }
 
     public String getTileName() {
         return "player";
