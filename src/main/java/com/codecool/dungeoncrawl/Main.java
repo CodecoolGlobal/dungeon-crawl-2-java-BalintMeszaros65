@@ -1,10 +1,10 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.Direction;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
-import com.codecool.dungeoncrawl.logic.actors.Actor;
-import com.codecool.dungeoncrawl.logic.actors.Skeleton;
+import com.codecool.dungeoncrawl.logic.actors.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -17,9 +17,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main extends Application {
+    static Random random = new Random();
     GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
@@ -55,47 +58,137 @@ public class Main extends Application {
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()) {
-            // TODO move validation (instance of?)
-            // TODO pickup item (mouseclick)
-            case W:
-                map.getPlayer().move(0, -1);
-                moveEnemies();
-                refresh();
+        Player player = map.getPlayer();
+        int playerDistance = player.getDistance();
+        if (player.isAlive()) {
+            switch (keyEvent.getCode()) {
+                // TODO pickup item (mouseclick)
+                case W:
+                    if (player.validateMove(0, -playerDistance)) {
+                        player.move(0, -playerDistance);
+                    }
+                    player.setDirection(Direction.NORTH);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case S:
+                    if (player.validateMove(0, playerDistance)) {
+                        player.move(0, playerDistance);
+                    }
+                    player.setDirection(Direction.SOUTH);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case A:
+                    if (player.validateMove(-playerDistance, 0)) {
+                        player.move(-playerDistance, 0);
+                    }
+                    player.setDirection(Direction.WEST);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case D:
+                    if (player.validateMove(playerDistance, 0)) {
+                        player.move(playerDistance, 0);
+                    }
+                    player.setDirection(Direction.EAST);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case SPACE:
+                    switch (player.getDirection()) {
+                        case NORTH:
+                            if (player.isNeighborActor(0, -1)) {
+                                player.attack(0, -1);
+                                retaliation(player, Direction.NORTH);
+                            }
+                            break;
+                        case SOUTH:
+                            if (player.isNeighborActor(0, 1)) {
+                                player.attack(0, 1);
+                                retaliation(player, Direction.SOUTH);
+                            }
+                            break;
+                        case WEST:
+                            if (player.isNeighborActor(-1, 0)) {
+                                player.attack(-1, 0);
+                                retaliation(player, Direction.WEST);
+                            }
+                            break;
+                        case EAST:
+                            if (player.isNeighborActor(1, 0)) {
+                                player.attack(1, 0);
+                                retaliation(player, Direction.EAST);
+                            }
+                            break;
+                    }
+                    actWithEnemies();
+                    refresh();
+                    break;
+            }
+            player.updateIsAlive();
+        }
+    }
+
+    private void retaliation(Player player, Direction direction) {
+        Actor enemy;
+        switch (direction) {
+            case NORTH:
+                enemy = player.getCellNeighborActor(0, -1);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
                 break;
-            case S:
-                map.getPlayer().move(0, 1);
-                moveEnemies();
-                refresh();
+            case SOUTH:
+                enemy = player.getCellNeighborActor(0, 1);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
                 break;
-            case A:
-                map.getPlayer().move(-1, 0);
-                moveEnemies();
-                refresh();
+            case WEST:
+                enemy = player.getCellNeighborActor(-1, 0);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
                 break;
-            case D:
-                map.getPlayer().move(1,0);
-                moveEnemies();
-                refresh();
-                break;
-            case SPACE:
-                // TODO attack
-                moveEnemies();
-                refresh();
+            case EAST:
+                enemy = player.getCellNeighborActor(1, 0);
+                enemy.updateIsAlive();
+                if (enemy.isAlive()) {
+                    player.sufferDamage(enemy.getDamage());
+                }
                 break;
         }
     }
 
-    private void moveEnemies() {
-        // TODO enemy checking neighbors for player + if true damage
-        // TODO enemy movement method
+    private void actWithEnemies() {
         List<Actor> enemies = map.getEnemies();
+        List<Actor> enemiesToBeRemoved = new ArrayList<>();
         if (enemies != null) {
             for (Actor enemy : enemies) {
-                if (enemy instanceof Skeleton) {
-                    // enemy.move
-
+                if (enemy.isAlive()) {
+                    if (enemy instanceof Zombie) {
+                        enemy.act(0, 0);
+                    } else if (enemy instanceof Skeleton) {
+                        Skeleton skeleton = (Skeleton) enemy;
+                        int[] DxDy = skeleton.getDxDy();
+                        skeleton.act(DxDy[0], DxDy[1]);
+                    } else if (enemy instanceof Ghost) {
+                        Ghost ghost = (Ghost) enemy;
+                        int[] DxDy = ghost.getDxDy();
+                        ghost.act(DxDy[0], DxDy[1]);
+                    }
+                    enemy.updateIsAlive();
+                } else {
+                    enemy.getCell().setActor(null);
+                    enemiesToBeRemoved.add(enemy);
                 }
+            }
+            for (Actor enemyToBeRemoved: enemiesToBeRemoved) {
+                enemies.remove(enemyToBeRemoved);
             }
         }
     }
@@ -106,9 +199,9 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
-                if (cell.getActor() != null) {
+                if (cell.hasActor()) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
-                } else if (cell.getItem() != null) {
+                } else if (cell.hasItem()) {
                     Tiles.drawTile(context, cell.getItem(), x, y);
                 } else {
                     Tiles.drawTile(context, cell, x, y);
@@ -118,5 +211,7 @@ public class Main extends Application {
         healthLabel.setText("" + map.getPlayer().getHealth());
     }
 
-    // TODO randint
+    public static int randInt(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
+    }
 }
