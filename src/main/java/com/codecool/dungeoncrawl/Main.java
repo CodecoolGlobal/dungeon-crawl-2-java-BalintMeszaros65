@@ -20,6 +20,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Map;
@@ -60,137 +61,97 @@ public class Main extends Application {
     private void onKeyPressed(KeyEvent keyEvent) {
         Player player = map.getPlayer();
         int playerDistance = player.getDistance();
-        switch (keyEvent.getCode()) {
-            // TODO move validation (instance of?)
-            // TODO pickup item (mouseclick)
-            case W:
-                if (player.validateMove(0, -playerDistance)) {
-                    player.move(0, -playerDistance);
-                }
-                player.setDirection(Direction.NORTH);
-                actWithEnemies();
-                refresh();
-                break;
-            case S:
-                if (player.validateMove(0, playerDistance)) {
-                    player.move(0, playerDistance);
-                }
-                player.setDirection(Direction.SOUTH);
-                actWithEnemies();
-                refresh();
-                break;
-            case A:
-                if (player.validateMove(-playerDistance, 0)) {
-                    player.move(-playerDistance, 0);
-                }
-                player.setDirection(Direction.WEST);
-                actWithEnemies();
-                refresh();
-                break;
-            case D:
-                if (player.validateMove(playerDistance, 0)) {
-                    player.move(playerDistance, 0);
-                }
-                player.setDirection(Direction.EAST);
-                actWithEnemies();
-                refresh();
-                break;
-            case SPACE:
-                switch (player.getDirection()) {
-                    case NORTH:
-                        if (player.isNeighborActor(0, -1)) {
-                            player.attack(0, -1);
-                        }
-                        break;
-                    case SOUTH:
-                        if (player.isNeighborActor(0, 1)) {
-                            player.attack(0, 1);
-                        }
-                        break;
-                    case WEST:
-                        if (player.isNeighborActor(-1, 0)) {
-                            player.attack(-1, 0);
-                        }
-                        break;
-                    case EAST:
-                        if (player.isNeighborActor(1, 0)) {
-                            player.attack(1, 0);
-                        }
-                        break;
-                }
-                actWithEnemies();
-                refresh();
-                break;
+        if (player.isAlive()) {
+            switch (keyEvent.getCode()) {
+                // TODO pickup item (mouseclick)
+                case W:
+                    if (player.validateMove(0, -playerDistance)) {
+                        player.move(0, -playerDistance);
+                    }
+                    player.setDirection(Direction.NORTH);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case S:
+                    if (player.validateMove(0, playerDistance)) {
+                        player.move(0, playerDistance);
+                    }
+                    player.setDirection(Direction.SOUTH);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case A:
+                    if (player.validateMove(-playerDistance, 0)) {
+                        player.move(-playerDistance, 0);
+                    }
+                    player.setDirection(Direction.WEST);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case D:
+                    if (player.validateMove(playerDistance, 0)) {
+                        player.move(playerDistance, 0);
+                    }
+                    player.setDirection(Direction.EAST);
+                    actWithEnemies();
+                    refresh();
+                    break;
+                case SPACE:
+                    switch (player.getDirection()) {
+                        case NORTH:
+                            if (player.isNeighborActor(0, -1)) {
+                                player.attack(0, -1);
+                            }
+                            break;
+                        case SOUTH:
+                            if (player.isNeighborActor(0, 1)) {
+                                player.attack(0, 1);
+                            }
+                            break;
+                        case WEST:
+                            if (player.isNeighborActor(-1, 0)) {
+                                player.attack(-1, 0);
+                            }
+                            break;
+                        case EAST:
+                            if (player.isNeighborActor(1, 0)) {
+                                player.attack(1, 0);
+                            }
+                            break;
+                    }
+                    actWithEnemies();
+                    refresh();
+                    break;
+            }
+            player.updateIsAlive();
         }
     }
 
     private void actWithEnemies() {
-        // TODO enemy checking neighbors for player + if true damage
-        // TODO enemy movement method
         List<Actor> enemies = map.getEnemies();
+        List<Actor> enemiesToBeRemoved = new ArrayList<>();
         if (enemies != null) {
             for (Actor enemy : enemies) {
-                if (enemy instanceof Skeleton) {
-                    actWithSkeleton(enemy);
-                } else if (enemy instanceof Ghost) {
-                    actWithGhost(enemy);
-                } else if (enemy instanceof Zombie) {
-                    actWithZombie(enemy);
+                if (enemy.isAlive()) {
+                    if (enemy instanceof Zombie) {
+                        enemy.act(0, 0);
+                    } else if (enemy instanceof Skeleton) {
+                        Skeleton skeleton = (Skeleton) enemy;
+                        int[] DxDy = skeleton.getDxDy();
+                        skeleton.act(DxDy[0], DxDy[1]);
+                    } else if (enemy instanceof Ghost) {
+                        Ghost ghost = (Ghost) enemy;
+                        int[] DxDy = ghost.getDxDy();
+                        ghost.act(DxDy[0], DxDy[1]);
+                    }
+                    enemy.updateIsAlive();
+                } else {
+                    enemy.getCell().setActor(null);
+                    enemiesToBeRemoved.add(enemy);
                 }
             }
-        }
-    }
-
-    private void actWithSkeleton(Actor skeleton) {
-        int dx = 0;
-        int dy = 0;
-        int skeletonDistance = skeleton.getDistance();
-        if (randInt(0, 1) == 0) {
-            if (randInt(0, 1) == 0) {
-                dx = skeletonDistance;
-            } else {
-                dx = -skeletonDistance;
-            }
-        } else {
-            if (randInt(0, 1) == 0) {
-                dy = skeletonDistance;
-            } else {
-                dy = -skeletonDistance;
-            }
-        }
-        actWithEnemy(skeleton, dx, dy);
-
-    }
-
-    private void actWithGhost(Actor ghost) {
-        int ghostDistance = ghost.getDistance();
-        int dx = randInt(-ghostDistance, ghostDistance);
-        int dy = randInt(-ghostDistance, ghostDistance);
-        actWithEnemy(ghost, dx, dy);
-    }
-
-    private void actWithZombie(Actor zombie) {
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                if (i != 0 || j != 0) {
-                    actWithEnemy(zombie, - i, - j);
-                }
-            }
-        }
-    }
-
-    private void actWithEnemy(Actor enemy, int dx, int dy) {
-        if (enemy.isNeighborActor(dx, dy)) {
-            if (enemy.getCellNeighborActor(dx, dy) instanceof Player) {
-                enemy.attack(dx, dy);
-            } else {
-                if (enemy.validateMove(dx, dy)) {
-                    enemy.move(dx, dy);
-                }
-            }
-        } else {
-            if (enemy.validateMove(dx, dy)) {
-                enemy.move(dx, dy);
+            for (Actor enemyToBeRemoved: enemiesToBeRemoved) {
+                enemies.remove(enemyToBeRemoved);
             }
         }
     }
@@ -202,9 +163,9 @@ public class Main extends Application {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
-                if (cell.getActor() != null) {
+                if (cell.hasActor()) {
                     Tiles.drawTile(context, cell.getActor(), x, y);
-                } else if (cell.getItem() != null) {
+                } else if (cell.hasItem()) {
                     Tiles.drawTile(context, cell.getItem(), x, y);
                 } else {
                     Tiles.drawTile(context, cell, x, y);

@@ -16,7 +16,7 @@ public class Player extends Actor {
     private Direction direction;
 
     public Player(Cell cell) {
-        super(cell, 10, 1, 1);
+        super(cell, 10000, 1, 1);
         this.direction = Direction.NORTH;
         this.inventory = new HashMap<>();
     }

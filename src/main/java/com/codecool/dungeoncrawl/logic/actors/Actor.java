@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 
+// TODO public / private methods
 public abstract class Actor implements Drawable {
     private Cell cell;
     private int health;
@@ -20,7 +21,6 @@ public abstract class Actor implements Drawable {
         this.isAlive = true;
     }
 
-    // TODO validate in subclasses
     public abstract boolean validateMove(int dx, int dy);
 
     public void attack(int dx, int dy) {
@@ -94,5 +94,21 @@ public abstract class Actor implements Drawable {
 
     public int getDistance() {
         return distance;
+    }
+
+    public void act(int dx, int dy) {
+        if (isNeighborActor(dx, dy)) {
+            if (getCellNeighborActor(dx, dy) instanceof Player) {
+                attack(dx, dy);
+            } else {
+                if (validateMove(dx, dy)) {
+                    move(dx, dy);
+                }
+            }
+        } else {
+            if (validateMove(dx, dy)) {
+                move(dx, dy);
+            }
+        }
     }
 }
