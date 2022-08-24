@@ -17,8 +17,8 @@ public class Ghost extends Actor{
     }
 
     @Override
-    public boolean attack(int x, int y, int damage) {
-        return false;
+    public void attack(int x, int y, int damage) {
+
     }
 
     @Override
