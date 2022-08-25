@@ -30,6 +30,10 @@ public enum Sound {
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
+            clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP)
+                    clip.close();
+            });
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException ignored){}
 
     }

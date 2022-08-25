@@ -44,9 +44,9 @@ public class Player extends Actor {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
         if (inventory.containsKey("sword")){
-            Sound.SWORDDUEL.playSound("SwordDuel.wav");
+            Sound.SWORDDUEL.playSound(String.valueOf(Sound.SWORDDUEL));
         } else {
-            Sound.PUNCH.playSound("Punch.wav");
+            Sound.PUNCH.playSound(String.valueOf(Sound.PUNCH));
         }
         retaliation();
     }
