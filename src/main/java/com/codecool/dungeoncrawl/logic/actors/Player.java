@@ -10,29 +10,32 @@ import java.util.Map;
 // TODO different print if it has shield
 // TODO score
 public class Player extends Actor {
-
-    // TODO name
-    // TODO validation based on name
     private Map<String, Integer> inventory;
-
+    private boolean noClip;
     private Direction direction;
 
     public Player(Cell cell) {
-        super(cell, 10000, 1, 1);
+        super(cell, 100, 1, 1);
         this.direction = Direction.NORTH;
         this.inventory = new HashMap<>();
+        this.noClip = false;
     }
 
     @Override
     public boolean validateMove(int dx, int dy) {
         boolean neighborActor = isNeighborActor(dx, dy);
         boolean neighborCellTypeFloorOrDoor = isNeighborCellType(dx, dy, CellType.FLOOR) ||
-                isNeighborCellType(dx, dy, CellType.DOOR);
+                isNeighborCellType(dx, dy, CellType.DOOR) || isNeighborCellType(dx, dy, CellType.STAIRSDOWN) ||
+                isNeighborCellType(dx, dy, CellType.STAIRSUP);
         boolean closedDoor = false;
         try {
             closedDoor = "closed-door".equals(getCellNeighborItem(dx, dy).getTileName());
         } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
-        return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
+        if (noClip) {
+            return true;
+        } else {
+            return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
+        }
     }
 
     @Override
@@ -72,7 +75,11 @@ public class Player extends Actor {
         return inventory;
     }
 
-    public void setInventory(String string) {
+    public void setInventory(Map<String, Integer> inventory) {
+        this.inventory = inventory;
+    }
+
+    public void putItemToInventory(String string) {
         inventory.merge(string, 1, Integer::sum);
     }
 
@@ -89,5 +96,14 @@ public class Player extends Actor {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void setCheater() {
+        this.noClip = true;
+        setHealth(10000);
+    }
+
+    public boolean getCheater() {
+        return noClip;
     }
 }
