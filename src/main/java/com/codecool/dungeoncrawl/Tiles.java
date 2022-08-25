@@ -32,9 +32,9 @@ public class Tiles {
         tileMap.put("ghost", new Tile(26, 6));
         tileMap.put("open-door", new Tile(2, 9));
         tileMap.put("closed-door", new Tile(1, 9));
-        tileMap.put("sword", new Tile(4, 32));
+        tileMap.put("sword", new Tile(4, 30));
         tileMap.put("coin", new Tile(22, 4));
-        tileMap.put("health-potion", new Tile(23, 23));
+        tileMap.put("health-potion", new Tile(17, 25));
         tileMap.put("key", new Tile(18, 23));
     }
 

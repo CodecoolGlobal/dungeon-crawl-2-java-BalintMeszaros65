@@ -6,9 +6,10 @@ import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
+import com.codecool.dungeoncrawl.logic.items.HealthPotion;
+import com.codecool.dungeoncrawl.logic.items.Item;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,9 +23,12 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Map;
+import java.util.Random;
 
+// TODO sounds
+// TODO map
+// TODO zoom
 public class Main extends Application {
     static Random random = new Random();
     GameMap map = MapLoader.loadMap();
@@ -63,7 +67,14 @@ public class Main extends Application {
         int playerDistance = player.getDistance();
         if (player.isAlive()) {
             switch (keyEvent.getCode()) {
-                // TODO pickup item (mouseclick)
+                case Q:
+                    if (player.getInventory().containsKey("health-potion")) {
+                        player.healUp(HealthPotion.getHealsAmount());
+                        player.removeInventoryItem("health-potion");
+                    }
+                    actWithEnemies();
+                    refresh();
+                    break;
                 case W:
                     if (player.validateMove(0, -playerDistance)) {
                         player.move(0, -playerDistance);
@@ -234,11 +245,11 @@ public class Main extends Application {
     private void addItemButton(int positionOnUI) {
         Player player = map.getPlayer();
         if (player.getCell().hasItem()) {
-            String item = player.getCell().getItem().toString();
-            Button itemButton = new Button("Pick up " + item);
+            Item item = player.getCell().getItem();
+            Button itemButton = new Button("Pick up " + item.getTileName());
             ui.add(itemButton, 0, positionOnUI);
             itemButton.setOnAction(event -> {
-                player.setInventory(item);
+                player.setInventory(item.getTileName());
                 player.getCell().setItem(null);
                 refresh();
             });
@@ -248,21 +259,23 @@ public class Main extends Application {
     private void addDoorButton(int positionOnUI) {
         Player player = map.getPlayer();
         int[] closedDoorPosition = new int[0];
-        if (player.getCell().getNeighbor(0,1).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {0, 1};
-        } else if (player.getCell().getNeighbor(0,-1).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {0, -1};
-        } else if (player.getCell().getNeighbor(1,0).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {1, 0};
-        } else if (player.getCell().getNeighbor(-1,0).getItem() instanceof ClosedDoor) {
-            closedDoorPosition = new int[] {-1, 0};
-        }
-        if (closedDoorPosition.length == 2 && player.getInventory().containsKey("Key")) {
+        try {
+            if (player.getCell().getNeighborItem(0, 1) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{0, 1};
+            } else if (player.getCell().getNeighborItem(0, -1) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{0, -1};
+            } else if (player.getCell().getNeighborItem(1, 0) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{1, 0};
+            } else if (player.getCell().getNeighborItem(-1, 0) instanceof ClosedDoor) {
+                closedDoorPosition = new int[]{-1, 0};
+            }
+        } catch (IndexOutOfBoundsException ignore) {}
+        if (closedDoorPosition.length == 2 && player.getInventory().containsKey("key")) {
             Button doorButton = new Button("Open door!");
             ui.add(doorButton, 0, positionOnUI);
             int[] finalClosedDoorPosition = closedDoorPosition;
             doorButton.setOnAction(event -> {
-                player.removeInventoryItem("Key");
+                player.removeInventoryItem("key");
                 map.getCell(player.getX() + finalClosedDoorPosition[0],
                         player.getY() + finalClosedDoorPosition[1]).setItem(null);
                 refresh();

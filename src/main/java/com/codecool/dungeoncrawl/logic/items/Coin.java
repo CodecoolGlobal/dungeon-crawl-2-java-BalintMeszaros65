@@ -13,8 +13,4 @@ public class Coin extends Item {
         return "coin";
     }
 
-    @Override
-    public String toString() {
-        return "Coin";
-    }
 }

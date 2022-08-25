@@ -3,8 +3,9 @@ package com.codecool.dungeoncrawl.logic.actors;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
+import com.codecool.dungeoncrawl.logic.items.Item;
 
-// TODO public / private methods
+
 public abstract class Actor implements Drawable {
     private Cell cell;
     private int health;
@@ -29,6 +30,10 @@ public abstract class Actor implements Drawable {
 
     public Actor getCellNeighborActor(int dx, int dy) {
        return this.getCell().getNeighborActor(dx, dy);
+    }
+
+    public Item getCellNeighborItem(int dx, int dy) {
+        return this.getCell().getNeighborItem(dx, dy);
     }
 
     public void move(int dx, int dy) {
@@ -69,12 +74,22 @@ public abstract class Actor implements Drawable {
     }
 
     public boolean isNeighborItem (int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
+        Cell nextCell;
+        try {
+            nextCell = cell.getNeighbor(dx, dy);
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            return false;
+        }
         return nextCell.hasItem();
     }
 
     public boolean isNeighborCellType (int dx, int dy, CellType cellType) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
+        Cell nextCell;
+        try {
+            nextCell = cell.getNeighbor(dx, dy);
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            return false;
+        }
         return nextCell.isCellType(cellType);
     }
 
@@ -110,5 +125,9 @@ public abstract class Actor implements Drawable {
                 move(dx, dy);
             }
         }
+    }
+
+    public void healUp(int health) {
+        this.health += health;
     }
 }
