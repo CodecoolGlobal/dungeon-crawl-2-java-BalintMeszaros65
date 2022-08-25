@@ -39,11 +39,11 @@ public abstract class Actor implements Drawable {
 
     public void move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-        cell.setActor(null);
-        nextCell.setActor(this);
-        if (cell.getActor() instanceof Player){
+        if (this instanceof Player){
             Sound.MOVE.playSound("Move.wav");
         }
+        cell.setActor(null);
+        nextCell.setActor(this);
         cell = nextCell;
 
     }
