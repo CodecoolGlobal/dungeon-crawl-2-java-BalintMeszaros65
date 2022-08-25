@@ -12,6 +12,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -333,5 +334,18 @@ public class Main extends Application {
 
     public static int randInt(int min, int max) {
         return random.nextInt((max - min) + 1) + min;
+    }
+
+    private String namePopup(Stage s) {
+        // set title for the stage
+        s.setTitle("creating textInput dialog");
+        // create a text input dialog
+        TextInputDialog td = new TextInputDialog("Knighty McKnight");
+        // setHeaderText
+        td.setHeaderText("enter your name");
+        // create a event handler
+        td.show();
+        // get input content and return
+        return td.getEditor().getText();
     }
 }
