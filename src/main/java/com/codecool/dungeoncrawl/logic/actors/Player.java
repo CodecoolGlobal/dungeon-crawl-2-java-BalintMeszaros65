@@ -10,9 +10,6 @@ import java.util.Map;
 // TODO different print if it has shield
 // TODO score
 public class Player extends Actor {
-
-    // TODO name
-    // TODO validation based on name
     private Map<String, Integer> inventory;
     private boolean noClip;
     private Direction direction;
@@ -81,5 +78,9 @@ public class Player extends Actor {
     public void setCheater(boolean noClip) {
         this.noClip = noClip;
         setHealth(10000);
+    }
+
+    public boolean getCheater() {
+        return noClip;
     }
 }

@@ -326,12 +326,15 @@ public class Main extends Application {
 
     private void nextMap(GameMap nextMap) {
         int prevHealth;
+        boolean prevCheater;
         Map<String, Integer> prevInventory;
         prevHealth = this.map.getPlayer().getHealth();
         prevInventory = this.map.getPlayer().getInventory();
+        prevCheater = this.map.getPlayer().getCheater();
         this.map = nextMap;
         this.map.getPlayer().setHealth(prevHealth);
         this.map.getPlayer().setInventory(prevInventory);
+        this.map.getPlayer().setCheater(prevCheater);
     }
 
     public static int randInt(int min, int max) {
