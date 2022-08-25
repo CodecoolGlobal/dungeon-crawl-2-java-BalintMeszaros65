@@ -334,7 +334,9 @@ public class Main extends Application {
         this.map = nextMap;
         this.map.getPlayer().setHealth(prevHealth);
         this.map.getPlayer().setInventory(prevInventory);
-        this.map.getPlayer().setCheater(prevCheater);
+        if (prevCheater) {
+            this.map.getPlayer().setCheater();
+        }
     }
 
     public static int randInt(int min, int max) {
@@ -352,7 +354,7 @@ public class Main extends Application {
         String playerName = namePopup();
         List<String> developers = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk")){};
         if (developers.contains(playerName)) {
-            map.getPlayer().setCheater(true);
+            map.getPlayer().setCheater();
         }
         return playerName;
     }

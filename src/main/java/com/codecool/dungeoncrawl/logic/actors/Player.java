@@ -75,8 +75,8 @@ public class Player extends Actor {
         this.direction = direction;
     }
 
-    public void setCheater(boolean noClip) {
-        this.noClip = noClip;
+    public void setCheater() {
+        this.noClip = true;
         setHealth(10000);
     }
 
