@@ -43,7 +43,11 @@ public class Cell implements Drawable {
     }
 
     public Cell getNeighbor (int dx, int dy) {
-        return gameMap.getCell(x + dx, y + dy);
+        Cell result = null;
+        try {
+            result = gameMap.getCell(x + dx, y + dy);
+        } catch (IndexOutOfBoundsException ignore) {}
+        return result;
     }
 
     public Actor getNeighborActor (int dx, int dy) {

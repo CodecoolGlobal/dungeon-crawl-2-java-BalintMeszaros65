@@ -6,7 +6,7 @@ import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 import com.codecool.dungeoncrawl.logic.items.Item;
 
-//TODO change enemies' move to avoid items
+
 public abstract class Actor implements Drawable {
     private Cell cell;
     private int health;
@@ -39,13 +39,14 @@ public abstract class Actor implements Drawable {
 
     public void move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if (this instanceof Player){
-            Sound.MOVE.playSound("Move.wav");
+        if (nextCell != null) {
+            if (this instanceof Player){
+                Sound.MOVE.playSound("Move.wav");
+            }
+            cell.setActor(null);
+            nextCell.setActor(this);
+            cell = nextCell;
         }
-        cell.setActor(null);
-        nextCell.setActor(this);
-        cell = nextCell;
-
     }
 
     public void sufferDamage (int damage) {
@@ -79,7 +80,11 @@ public abstract class Actor implements Drawable {
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
             return false;
         }
-        return nextCell.hasActor();
+        if (nextCell != null) {
+            return nextCell.hasActor();
+        } else {
+            return false;
+        }
     }
 
     public boolean isNeighborItem (int dx, int dy) {
@@ -89,7 +94,11 @@ public abstract class Actor implements Drawable {
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
             return false;
         }
-        return nextCell.hasItem();
+        if (nextCell != null) {
+            return nextCell.hasItem();
+        } else {
+            return false;
+        }
     }
 
     public boolean isNeighborCellType (int dx, int dy, CellType cellType) {
@@ -99,7 +108,11 @@ public abstract class Actor implements Drawable {
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
             return false;
         }
-        return nextCell.isCellType(cellType);
+        if (nextCell != null) {
+            return nextCell.isCellType(cellType);
+        } else {
+            return false;
+        }
     }
 
     public int getDamage() {
