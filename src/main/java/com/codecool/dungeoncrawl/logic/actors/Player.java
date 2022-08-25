@@ -7,7 +7,7 @@ import com.codecool.dungeoncrawl.logic.Direction;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO different print if it has shield
+
 // TODO score
 public class Player extends Actor {
     private Map<String, Integer> inventory;
@@ -68,7 +68,15 @@ public class Player extends Actor {
     }
 
     public String getTileName() {
-        return "player";
+        if (inventory.containsKey("sword") && inventory.containsKey("shield")) {
+            return "player";
+        } else if (inventory.containsKey("sword")) {
+            return "player-with-sword";
+        } else if (inventory.containsKey("shield")) {
+            return "player-with-shield";
+        } else {
+            return "player-naked";
+        }
     }
 
     public Map<String, Integer> getInventory() {
