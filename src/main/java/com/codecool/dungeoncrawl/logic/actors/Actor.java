@@ -73,7 +73,11 @@ public abstract class Actor implements Drawable {
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
             return false;
         }
-        return nextCell.hasActor();
+        if (nextCell != null) {
+            return nextCell.hasActor();
+        } else {
+            return false;
+        }
     }
 
     public boolean isNeighborItem (int dx, int dy) {
@@ -83,7 +87,11 @@ public abstract class Actor implements Drawable {
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
             return false;
         }
-        return nextCell.hasItem();
+        if (nextCell != null) {
+            return nextCell.hasItem();
+        } else {
+            return false;
+        }
     }
 
     public boolean isNeighborCellType (int dx, int dy, CellType cellType) {
@@ -93,7 +101,11 @@ public abstract class Actor implements Drawable {
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
             return false;
         }
-        return nextCell.isCellType(cellType);
+        if (nextCell != null) {
+            return nextCell.isCellType(cellType);
+        } else {
+            return false;
+        }
     }
 
     public int getDamage() {
