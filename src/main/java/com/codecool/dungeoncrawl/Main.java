@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -312,10 +313,9 @@ public class Main extends Application {
                 this.borderPane.setRight(null);
 
                 GraphicsContext context = canvas.getGraphicsContext2D();
-                context.setFill(Color.BLACK);
-                context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 context.setFont(new Font("arial", 42));
-                context.setFill(Color.WHITE);
+                context.setFill(Color.BLACK);
+                context.setTextAlign(TextAlignment.CENTER);
                 context.fillText("You WIN!", canvas.getWidth() / 2, canvas.getHeight() / 2);
             }
         }
