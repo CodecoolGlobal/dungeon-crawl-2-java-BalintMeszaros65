@@ -13,6 +13,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -30,6 +31,7 @@ public class Main extends Application {
     GameMap map2 = MapLoader.loadMap("map2");
     GameMap map3 = MapLoader.loadMap("map3");
     GameMap map = map1;
+    String playerName = setUpPlayerName();
     static Random random = new Random();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
@@ -113,25 +115,21 @@ public class Main extends Application {
                         case NORTH:
                             if (player.isNeighborActor(0, -1)) {
                                 player.attack(0, -1);
-                                retaliation(player, Direction.NORTH);
                             }
                             break;
                         case SOUTH:
                             if (player.isNeighborActor(0, 1)) {
                                 player.attack(0, 1);
-                                retaliation(player, Direction.SOUTH);
                             }
                             break;
                         case WEST:
                             if (player.isNeighborActor(-1, 0)) {
                                 player.attack(-1, 0);
-                                retaliation(player, Direction.WEST);
                             }
                             break;
                         case EAST:
                             if (player.isNeighborActor(1, 0)) {
                                 player.attack(1, 0);
-                                retaliation(player, Direction.EAST);
                             }
                             break;
                     }
@@ -141,42 +139,20 @@ public class Main extends Application {
             }
             player.updateIsAlive();
             changeMap();
+        } else {
+            Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
+            this.borderPane.setCenter(canvas);
+            this.borderPane.setRight(null);
+
+            GraphicsContext context = canvas.getGraphicsContext2D();
+            context.setFont(new Font("arial", 42));
+            context.setFill(Color.INDIANRED);
+            context.setTextAlign(TextAlignment.CENTER);
+            context.fillText("You died!", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
     }
 
-    private void retaliation(Player player, Direction direction) {
-        Actor enemy;
-        switch (direction) {
-            case NORTH:
-                enemy = player.getCellNeighborActor(0, -1);
-                enemy.updateIsAlive();
-                if (enemy.isAlive()) {
-                    player.sufferDamage(enemy.getDamage());
-                }
-                break;
-            case SOUTH:
-                enemy = player.getCellNeighborActor(0, 1);
-                enemy.updateIsAlive();
-                if (enemy.isAlive()) {
-                    player.sufferDamage(enemy.getDamage());
-                }
-                break;
-            case WEST:
-                enemy = player.getCellNeighborActor(-1, 0);
-                enemy.updateIsAlive();
-                if (enemy.isAlive()) {
-                    player.sufferDamage(enemy.getDamage());
-                }
-                break;
-            case EAST:
-                enemy = player.getCellNeighborActor(1, 0);
-                enemy.updateIsAlive();
-                if (enemy.isAlive()) {
-                    player.sufferDamage(enemy.getDamage());
-                }
-                break;
-        }
-    }
+
 
     private void actWithEnemies() {
         List<Actor> enemies = map.getEnemies();
@@ -233,10 +209,11 @@ public class Main extends Application {
     private void fillGridPane() {
         Player player = map.getPlayer();
         ui.getChildren().clear();
-        ui.add(new Label("Health:"), 0, 0);
-        ui.add(new Label(String.format("%30s", player.getHealth())), 0, 0);
+        ui.add(new Label("Player: " + playerName), 0, 0);
+        ui.add(new Label("Health:"), 0, 1);
+        ui.add(new Label(String.format("%30s", player.getHealth())), 0, 1);
         Map<String, Integer> inventory = player.getInventory();
-        int positionOnUI = 1;
+        int positionOnUI = 2;
         for (String key : inventory.keySet()) {
             String itemCount = String.format("%30s", inventory.get(key));
             ui.add(new Label(key.substring(0, 1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
@@ -335,15 +312,36 @@ public class Main extends Application {
 
     private void nextMap(GameMap nextMap) {
         int prevHealth;
+        boolean prevCheater;
         Map<String, Integer> prevInventory;
         prevHealth = this.map.getPlayer().getHealth();
         prevInventory = this.map.getPlayer().getInventory();
+        prevCheater = this.map.getPlayer().getCheater();
         this.map = nextMap;
         this.map.getPlayer().setHealth(prevHealth);
         this.map.getPlayer().setInventory(prevInventory);
+        if (prevCheater) {
+            this.map.getPlayer().setCheater();
+        }
     }
 
     public static int randInt(int min, int max) {
         return random.nextInt((max - min) + 1) + min;
+    }
+
+    private String namePopup() {
+        TextInputDialog td = new TextInputDialog("Knighty McKnight");
+        td.setHeaderText("enter your name");
+        td.showAndWait();
+        return td.getEditor().getText();
+    }
+
+    private String setUpPlayerName() {
+        String playerName = namePopup();
+        List<String> developers = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk")){};
+        if (developers.contains(playerName)) {
+            map.getPlayer().setCheater();
+        }
+        return playerName;
     }
 }

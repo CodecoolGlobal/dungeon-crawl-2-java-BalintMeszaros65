@@ -7,20 +7,18 @@ import com.codecool.dungeoncrawl.logic.Direction;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO different print if it has shield
+
 // TODO score
 public class Player extends Actor {
-
-    // TODO name
-    // TODO validation based on name
     private Map<String, Integer> inventory;
-
+    private boolean noClip;
     private Direction direction;
 
     public Player(Cell cell) {
-        super(cell, 10000, 1, 1);
+        super(cell, 100, 1, 1);
         this.direction = Direction.NORTH;
         this.inventory = new HashMap<>();
+        this.noClip = false;
     }
 
     @Override
@@ -33,13 +31,40 @@ public class Player extends Actor {
         try {
             closedDoor = "closed-door".equals(getCellNeighborItem(dx, dy).getTileName());
         } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
-        return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
+        if (noClip) {
+            return true;
+        } else {
+            return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
+        }
     }
 
     @Override
     public void attack(int dx, int dy) {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
+        retaliation();
+    }
+
+    private void retaliation() {
+        Actor enemy = null;
+        switch (direction) {
+            case NORTH:
+                enemy = getCellNeighborActor(0, -1);
+                break;
+            case SOUTH:
+                enemy = getCellNeighborActor(0, 1);
+                break;
+            case WEST:
+                enemy = getCellNeighborActor(-1, 0);
+                break;
+            case EAST:
+                enemy = getCellNeighborActor(1, 0);
+                break;
+        }
+        enemy.updateIsAlive();
+        if (enemy.isAlive()) {
+            sufferDamage(enemy.getDamage());
+        }
     }
 
     @Override
@@ -53,7 +78,15 @@ public class Player extends Actor {
     }
 
     public String getTileName() {
-        return "player";
+        if (inventory.containsKey("sword") && inventory.containsKey("shield")) {
+            return "player";
+        } else if (inventory.containsKey("sword")) {
+            return "player-with-sword";
+        } else if (inventory.containsKey("shield")) {
+            return "player-with-shield";
+        } else {
+            return "player-naked";
+        }
     }
 
     public Map<String, Integer> getInventory() {
@@ -81,5 +114,14 @@ public class Player extends Actor {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void setCheater() {
+        this.noClip = true;
+        setHealth(10000);
+    }
+
+    public boolean getCheater() {
+        return noClip;
     }
 }
