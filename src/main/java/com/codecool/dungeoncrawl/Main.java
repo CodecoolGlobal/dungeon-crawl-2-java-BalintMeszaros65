@@ -21,10 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 // TODO sounds
 // TODO map
@@ -253,7 +250,7 @@ public class Main extends Application {
             Button itemButton = new Button("Pick up " + item.getTileName());
             ui.add(itemButton, 0, positionOnUI);
             itemButton.setOnAction(event -> {
-                player.setInventory(item.getTileName());
+                player.putItemToInventory(item.getTileName());
                 player.getCell().setItem(null);
                 refresh();
             });
@@ -289,25 +286,34 @@ public class Main extends Application {
 
     private void changeMap() {
         int prevHealth;
+        Map<String, Integer> prevInventory;
         if (map.getPlayer().getCell().getTileName().equals("stairs-up")) {
             if (this.map.equals(map2)) {
                 prevHealth = this.map.getPlayer().getHealth();
+                prevInventory = this.map.getPlayer().getInventory();
                 this.map = map1;
                 this.map.getPlayer().setHealth(prevHealth);
+                this.map.getPlayer().setInventory(prevInventory);
             } else if (this.map.equals(map3)) {
                 prevHealth = this.map.getPlayer().getHealth();
+                prevInventory = this.map.getPlayer().getInventory();
                 this.map = map2;
                 this.map.getPlayer().setHealth(prevHealth);
+                this.map.getPlayer().setInventory(prevInventory);
             }
         } else if (map.getPlayer().getCell().getTileName().equals("stairs-down")) {
             if (this.map.equals(map1)) {
                 prevHealth = this.map.getPlayer().getHealth();
+                prevInventory = this.map.getPlayer().getInventory();
                 this.map = map2;
                 this.map.getPlayer().setHealth(prevHealth);
+                this.map.getPlayer().setInventory(prevInventory);
             } else if (this.map.equals(map2)) {
                 prevHealth = this.map.getPlayer().getHealth();
+                prevInventory = this.map.getPlayer().getInventory();
                 this.map = map3;
                 this.map.getPlayer().setHealth(prevHealth);
+                this.map.getPlayer().setInventory(prevInventory);
             }
         }
     }

@@ -27,7 +27,8 @@ public class Player extends Actor {
     public boolean validateMove(int dx, int dy) {
         boolean neighborActor = isNeighborActor(dx, dy);
         boolean neighborCellTypeFloorOrDoor = isNeighborCellType(dx, dy, CellType.FLOOR) ||
-                isNeighborCellType(dx, dy, CellType.DOOR);
+                isNeighborCellType(dx, dy, CellType.DOOR) || isNeighborCellType(dx, dy, CellType.STAIRSDOWN) ||
+                isNeighborCellType(dx, dy, CellType.STAIRSUP);
         boolean closedDoor = false;
         try {
             closedDoor = "closed-door".equals(getCellNeighborItem(dx, dy).getTileName());
@@ -49,7 +50,11 @@ public class Player extends Actor {
         return inventory;
     }
 
-    public void setInventory(String string) {
+    public void setInventory(Map<String, Integer> inventory) {
+        this.inventory = inventory;
+    }
+
+    public void putItemToInventory(String string) {
         inventory.merge(string, 1, Integer::sum);
     }
 
