@@ -145,6 +145,16 @@ public class Main extends Application {
             }
             player.updateIsAlive();
             changeMap();
+        } else {
+            Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
+            this.borderPane.setCenter(canvas);
+            this.borderPane.setRight(null);
+
+            GraphicsContext context = canvas.getGraphicsContext2D();
+            context.setFont(new Font("arial", 42));
+            context.setFill(Color.INDIANRED);
+            context.setTextAlign(TextAlignment.CENTER);
+            context.fillText("You died!", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
     }
 
