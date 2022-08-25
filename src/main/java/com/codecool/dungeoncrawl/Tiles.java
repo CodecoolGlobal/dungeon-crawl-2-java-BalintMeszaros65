@@ -38,6 +38,8 @@ public class Tiles {
         tileMap.put("stairs-down", new Tile(3, 6));
         tileMap.put("open-door", new Tile(2, 9));
         tileMap.put("closed-door", new Tile(0, 9));
+        tileMap.put("shield", new Tile(5, 26));
+        tileMap.put("coin-chest", new Tile(8, 6));
     }
 
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {

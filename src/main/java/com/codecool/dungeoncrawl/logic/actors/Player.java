@@ -42,6 +42,16 @@ public class Player extends Actor {
                 this.getDamage() + inventory.getOrDefault("sword", 0));
     }
 
+    @Override
+    public void sufferDamage(int damage) {
+        if (inventory.containsKey("shield")) {
+            setHealth(getHealth() - damage / 2);
+            removeInventoryItem("shield");
+        } else {
+            setHealth(getHealth() - damage);
+        }
+    }
+
     public String getTileName() {
         return "player";
     }

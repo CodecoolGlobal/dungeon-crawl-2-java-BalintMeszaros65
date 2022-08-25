@@ -76,6 +76,10 @@ public class MapLoader {
                         case 'v':
                             cell.setType(CellType.STAIRSDOWN);
                             break;
+                        case ')':
+                            cell.setType(CellType.FLOOR);
+                            map.setItem(new Shield(cell));
+                            break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");
                     }
