@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
+import com.codecool.dungeoncrawl.Sound;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Direction;
@@ -42,6 +43,11 @@ public class Player extends Actor {
     public void attack(int dx, int dy) {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
+        if (inventory.containsKey("sword")){
+            Sound.SWORDDUEL.playSound(String.valueOf(Sound.SWORDDUEL));
+        } else {
+            Sound.PUNCH.playSound(String.valueOf(Sound.PUNCH));
+        }
         retaliation();
     }
 
@@ -61,6 +67,12 @@ public class Player extends Actor {
                 enemy = getCellNeighborActor(1, 0);
                 break;
         }
+        if (inventory.containsKey("sword")){
+            Sound.SWORDDUEL.playSound("SwordDuel.wav");
+        } else {
+            Sound.PUNCH.playSound("Punch.wav");
+        }
+
         enemy.updateIsAlive();
         if (enemy.isAlive()) {
             sufferDamage(enemy.getDamage());
@@ -99,6 +111,7 @@ public class Player extends Actor {
 
     public void putItemToInventory(String string) {
         inventory.merge(string, 1, Integer::sum);
+        Sound.PICKUPITEM.playSound("PickUpItem.wav");
     }
 
     public void removeInventoryItem(String item) {

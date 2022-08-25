@@ -33,6 +33,8 @@ public class Main extends Application {
     GameMap map = map1;
     String playerName = setUpPlayerName();
     static Random random = new Random();
+
+    private int roundCounter = 0;
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
@@ -85,6 +87,7 @@ public class Main extends Application {
                     player.setDirection(Direction.NORTH);
                     actWithEnemies();
                     refresh();
+                    roundCounter++;
                     break;
                 case S:
                     if (player.validateMove(0, playerDistance)) {
@@ -93,6 +96,7 @@ public class Main extends Application {
                     player.setDirection(Direction.SOUTH);
                     actWithEnemies();
                     refresh();
+                    roundCounter++;
                     break;
                 case A:
                     if (player.validateMove(-playerDistance, 0)) {
@@ -101,6 +105,7 @@ public class Main extends Application {
                     player.setDirection(Direction.WEST);
                     actWithEnemies();
                     refresh();
+                    roundCounter++;
                     break;
                 case D:
                     if (player.validateMove(playerDistance, 0)) {
@@ -109,6 +114,10 @@ public class Main extends Application {
                     player.setDirection(Direction.EAST);
                     actWithEnemies();
                     refresh();
+                    roundCounter++;
+                    break;
+                case ESCAPE:
+                    // TODO exit from game and/or program
                     break;
                 case SPACE:
                     switch (player.getDirection()) {
@@ -150,8 +159,12 @@ public class Main extends Application {
             context.setTextAlign(TextAlignment.CENTER);
             context.fillText("You died!", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
+        if (roundCounter == 10){
+            Sound[] enemiesSound = {Sound.ZOMBIESOUND, Sound.GHOSTSOUND, Sound.SKELETONSOUND};
+            Sound pickedSound = enemiesSound[randInt(0,2)];
+            pickedSound.playSound(pickedSound.toString());
+        }
     }
-
 
 
     private void actWithEnemies() {
@@ -189,7 +202,7 @@ public class Main extends Application {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                renderArea(x,y);
+                renderArea(x, y);
             }
         }
         fillGridPane();
@@ -266,7 +279,8 @@ public class Main extends Application {
             } else if (player.getCell().getNeighborItem(-1, 0) instanceof ClosedDoor) {
                 closedDoorPosition = new int[]{-1, 0};
             }
-        } catch (IndexOutOfBoundsException ignore) {}
+        } catch (IndexOutOfBoundsException ignore) {
+        }
         if (closedDoorPosition.length == 2 && player.getInventory().containsKey("key")) {
             Button doorButton = new Button("Open door!");
             ui.add(doorButton, 0, positionOnUI);
@@ -275,6 +289,7 @@ public class Main extends Application {
                 player.removeInventoryItem("key");
                 map.getCell(player.getX() + finalClosedDoorPosition[0],
                         player.getY() + finalClosedDoorPosition[1]).setItem(null);
+                Sound.OPENDOOR.playSound("OpenDoor.wav");
                 refresh();
             });
         }
@@ -284,17 +299,21 @@ public class Main extends Application {
         if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSUP)) {
             if (this.map.equals(map3)) {
                 nextMap(map2);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map1);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             }
         } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSDOWN)) {
             if (this.map.equals(map1)) {
                 nextMap(map2);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map3);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map3)) {
                 Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
@@ -338,7 +357,8 @@ public class Main extends Application {
 
     private String setUpPlayerName() {
         String playerName = namePopup();
-        List<String> developers = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk")){};
+        List<String> developers = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk")) {
+        };
         if (developers.contains(playerName)) {
             map.getPlayer().setCheater();
         }
