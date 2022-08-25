@@ -1,7 +1,10 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.logic.actors.Ghost;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.Skeleton;
+import com.codecool.dungeoncrawl.logic.actors.Zombie;
+import com.codecool.dungeoncrawl.logic.items.*;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -33,14 +36,39 @@ public class MapLoader {
                             break;
                         case 's':
                             cell.setType(CellType.FLOOR);
-                            new Skeleton(cell);
+                            map.setEnemy(new Skeleton(cell));
                             break;
                         case '@':
                             cell.setType(CellType.FLOOR);
                             map.setPlayer(new Player(cell));
                             break;
-                        case 'D':
+                        case 'z':
+                            cell.setType(CellType.FLOOR);
+                            map.setEnemy(new Zombie(cell));
+                            break;
+                        case 'g':
+                            cell.setType(CellType.FLOOR);
+                            map.setEnemy(new Ghost(cell));
+                            break;
+                        case 'k':
+                            cell.setType(CellType.FLOOR);
+                            map.setItem(new Key(cell));
+                            break;
+                        case 'd':
                             cell.setType(CellType.DOOR);
+                            map.setItem(new ClosedDoor(cell));
+                            break;
+                        case 'c':
+                            cell.setType(CellType.FLOOR);
+                            map.setItem(new Coin(cell));
+                            break;
+                        case 'p':
+                            cell.setType(CellType.FLOOR);
+                            map.setItem(new HealthPotion(cell));
+                            break;
+                        case '/':
+                            cell.setType(CellType.FLOOR);
+                            map.setItem(new Sword(cell));
                             break;
                          case '^':
                             cell.setType(CellType.STAIRSUP);

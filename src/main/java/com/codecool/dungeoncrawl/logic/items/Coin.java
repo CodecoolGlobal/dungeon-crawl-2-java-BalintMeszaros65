@@ -12,4 +12,5 @@ public class Coin extends Item {
     public String getTileName() {
         return "coin";
     }
+
 }

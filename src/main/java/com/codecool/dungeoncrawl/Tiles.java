@@ -28,6 +28,12 @@ public class Tiles {
         tileMap.put("floor", new Tile(2, 0));
         tileMap.put("player", new Tile(27, 0));
         tileMap.put("skeleton", new Tile(29, 6));
+        tileMap.put("zombie", new Tile(28, 6));
+        tileMap.put("ghost", new Tile(26, 6));
+        tileMap.put("sword", new Tile(4, 30));
+        tileMap.put("coin", new Tile(22, 4));
+        tileMap.put("health-potion", new Tile(17, 25));
+        tileMap.put("key", new Tile(18, 23));
         tileMap.put("stairs-up", new Tile(2, 6));
         tileMap.put("stairs-down", new Tile(3, 6));
         tileMap.put("open-door", new Tile(2, 9));
