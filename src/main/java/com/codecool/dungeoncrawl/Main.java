@@ -278,17 +278,21 @@ public class Main extends Application {
         if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSUP)) {
             if (this.map.equals(map3)) {
                 nextMap(map2);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map1);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             }
         } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSDOWN)) {
             if (this.map.equals(map1)) {
                 nextMap(map2);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map3);
+                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map3)) {
                 Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
