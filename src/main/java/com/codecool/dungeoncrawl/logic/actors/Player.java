@@ -39,6 +39,29 @@ public class Player extends Actor {
     public void attack(int dx, int dy) {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
+        retaliation();
+    }
+
+    private void retaliation() {
+        Actor enemy = null;
+        switch (direction) {
+            case NORTH:
+                enemy = getCellNeighborActor(0, -1);
+                break;
+            case SOUTH:
+                enemy = getCellNeighborActor(0, 1);
+                break;
+            case WEST:
+                enemy = getCellNeighborActor(-1, 0);
+                break;
+            case EAST:
+                enemy = getCellNeighborActor(1, 0);
+                break;
+        }
+        enemy.updateIsAlive();
+        if (enemy.isAlive()) {
+            sufferDamage(enemy.getDamage());
+        }
     }
 
     public String getTileName() {
