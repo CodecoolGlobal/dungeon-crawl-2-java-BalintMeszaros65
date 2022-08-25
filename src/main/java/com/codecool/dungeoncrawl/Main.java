@@ -202,7 +202,7 @@ public class Main extends Application {
                     enemiesToBeRemoved.add(enemy);
                 }
             }
-            for (Actor enemyToBeRemoved: enemiesToBeRemoved) {
+            for (Actor enemyToBeRemoved : enemiesToBeRemoved) {
                 enemies.remove(enemyToBeRemoved);
             }
         }
@@ -214,17 +214,21 @@ public class Main extends Application {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
-                if (cell.hasActor()) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
-                } else if (cell.hasItem()) {
-                    Tiles.drawTile(context, cell.getItem(), x, y);
-                } else {
-                    Tiles.drawTile(context, cell, x, y);
-                }
+                renderArea(x,y);
             }
         }
         fillGridPane();
+    }
+
+    private void renderArea(int x, int y) {
+        Cell cell = map.getCell(x, y);
+        if (cell.hasActor()) {
+            Tiles.drawTile(context, cell.getActor(), x, y);
+        } else if (cell.hasItem()) {
+            Tiles.drawTile(context, cell.getItem(), x, y);
+        } else {
+            Tiles.drawTile(context, cell, x, y);
+        }
     }
 
     private void fillGridPane() {
@@ -236,7 +240,7 @@ public class Main extends Application {
         int positionOnUI = 1;
         for (String key : inventory.keySet()) {
             String itemCount = String.format("%30s", inventory.get(key));
-            ui.add(new Label(key.substring(0,1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
+            ui.add(new Label(key.substring(0, 1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
             ui.add(new Label(itemCount), 0, positionOnUI);
             positionOnUI++;
         }
@@ -287,7 +291,7 @@ public class Main extends Application {
     }
 
     private void changeMap() {
-        if (map.getPlayer().isNeighborCellType(0,0, CellType.STAIRSUP)) {
+        if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSUP)) {
             if (this.map.equals(map3)) {
                 nextMap(map2);
                 refresh();
@@ -295,7 +299,7 @@ public class Main extends Application {
                 nextMap(map1);
                 refresh();
             }
-        } else if (map.getPlayer().isNeighborCellType(0,0, CellType.STAIRSDOWN)) {
+        } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSDOWN)) {
             if (this.map.equals(map1)) {
                 nextMap(map2);
                 refresh();
@@ -312,7 +316,7 @@ public class Main extends Application {
                 context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 context.setFont(new Font("arial", 42));
                 context.setFill(Color.WHITE);
-                context.fillText("You WIN!", canvas.getWidth()/2, canvas.getHeight()/2);
+                context.fillText("You WIN!", canvas.getWidth() / 2, canvas.getHeight() / 2);
             }
         }
     }
