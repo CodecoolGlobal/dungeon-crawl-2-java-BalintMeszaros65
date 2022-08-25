@@ -112,8 +112,8 @@ public abstract class Actor implements Drawable {
 
     public void updateIsAlive() {
         if (health <= 0) {
-            isAlive = false;
             Sound.DIE.playSound("Die.wav");
+            isAlive = false;
         }
     }
 
