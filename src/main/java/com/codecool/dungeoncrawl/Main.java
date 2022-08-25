@@ -21,6 +21,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +46,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception{
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
@@ -106,6 +109,9 @@ public class Main extends Application {
                     player.setDirection(Direction.EAST);
                     actWithEnemies();
                     refresh();
+                    break;
+                case ESCAPE:
+                    // TODO exit from game and/or program
                     break;
                 case SPACE:
                     switch (player.getDirection()) {
@@ -199,12 +205,11 @@ public class Main extends Application {
                     enemiesToBeRemoved.add(enemy);
                 }
             }
-            for (Actor enemyToBeRemoved: enemiesToBeRemoved) {
+            for (Actor enemyToBeRemoved : enemiesToBeRemoved) {
                 enemies.remove(enemyToBeRemoved);
             }
         }
     }
-
 
     private void refresh() {
         context.setFill(Color.BLACK);
@@ -233,7 +238,7 @@ public class Main extends Application {
         int positionOnUI = 1;
         for (String key : inventory.keySet()) {
             String itemCount = String.format("%30s", inventory.get(key));
-            ui.add(new Label(key.substring(0,1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
+            ui.add(new Label(key.substring(0, 1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
             ui.add(new Label(itemCount), 0, positionOnUI);
             positionOnUI++;
         }
@@ -269,7 +274,8 @@ public class Main extends Application {
             } else if (player.getCell().getNeighborItem(-1, 0) instanceof ClosedDoor) {
                 closedDoorPosition = new int[]{-1, 0};
             }
-        } catch (IndexOutOfBoundsException ignore) {}
+        } catch (IndexOutOfBoundsException ignore) {
+        }
         if (closedDoorPosition.length == 2 && player.getInventory().containsKey("key")) {
             Button doorButton = new Button("Open door!");
             ui.add(doorButton, 0, positionOnUI);
@@ -286,4 +292,6 @@ public class Main extends Application {
     public static int randInt(int min, int max) {
         return random.nextInt((max - min) + 1) + min;
     }
+
+
 }

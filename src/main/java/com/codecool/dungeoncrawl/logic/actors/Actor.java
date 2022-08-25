@@ -1,11 +1,12 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
+import com.codecool.dungeoncrawl.Sound;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
 import com.codecool.dungeoncrawl.logic.items.Item;
 
-
+//TODO change enemies' move to avoid items
 public abstract class Actor implements Drawable {
     private Cell cell;
     private int health;
@@ -40,11 +41,16 @@ public abstract class Actor implements Drawable {
         Cell nextCell = cell.getNeighbor(dx, dy);
         cell.setActor(null);
         nextCell.setActor(this);
+        if (cell.getActor() instanceof Player){
+            Sound.MOVE.playSound("Move.wav");
+        }
         cell = nextCell;
+
     }
 
     public void sufferDamage (int damage) {
         this.health -= damage;
+        Sound.DAMAGE.playSound("Damage.wav");
     }
 
     public int getHealth() {
@@ -104,6 +110,7 @@ public abstract class Actor implements Drawable {
     public void updateIsAlive() {
         if (health <= 0) {
             isAlive = false;
+            Sound.DIE.playSound("Die.wav");
         }
     }
 
@@ -129,5 +136,6 @@ public abstract class Actor implements Drawable {
 
     public void healUp(int health) {
         this.health += health;
+        Sound.HEALHUP.playSound("HealUp.wav");
     }
 }
