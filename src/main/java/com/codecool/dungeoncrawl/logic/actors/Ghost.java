@@ -19,7 +19,11 @@ public class Ghost extends Actor implements DxDyable {
         } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
             return false;
         }
-        return !nextCell.isCellType(CellType.EMPTY) && !nextCell.hasActor() && !nextCell.hasItem();
+        if (nextCell != null) {
+            return !nextCell.isCellType(CellType.EMPTY) && !nextCell.hasActor() && !nextCell.hasItem();
+        } else {
+            return false;
+        }
     }
 
     public int[] getDxDy() {
