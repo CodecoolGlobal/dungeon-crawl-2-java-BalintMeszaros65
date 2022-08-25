@@ -32,6 +32,7 @@ public class Main extends Application {
     GameMap map2 = MapLoader.loadMap("map2");
     GameMap map3 = MapLoader.loadMap("map3");
     GameMap map = map1;
+    String playerName = setUpPlayerName();
     static Random random = new Random();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
@@ -235,10 +236,11 @@ public class Main extends Application {
     private void fillGridPane() {
         Player player = map.getPlayer();
         ui.getChildren().clear();
-        ui.add(new Label("Health:"), 0, 0);
-        ui.add(new Label(String.format("%30s", player.getHealth())), 0, 0);
+        ui.add(new Label("Player: " + playerName), 0, 0);
+        ui.add(new Label("Health:"), 0, 1);
+        ui.add(new Label(String.format("%30s", player.getHealth())), 0, 1);
         Map<String, Integer> inventory = player.getInventory();
-        int positionOnUI = 1;
+        int positionOnUI = 2;
         for (String key : inventory.keySet()) {
             String itemCount = String.format("%30s", inventory.get(key));
             ui.add(new Label(key.substring(0, 1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
@@ -336,16 +338,19 @@ public class Main extends Application {
         return random.nextInt((max - min) + 1) + min;
     }
 
-    private String namePopup(Stage s) {
-        // set title for the stage
-        s.setTitle("creating textInput dialog");
-        // create a text input dialog
+    private String namePopup() {
         TextInputDialog td = new TextInputDialog("Knighty McKnight");
-        // setHeaderText
         td.setHeaderText("enter your name");
-        // create a event handler
-        td.show();
-        // get input content and return
+        td.showAndWait();
         return td.getEditor().getText();
+    }
+
+    private String setUpPlayerName() {
+        String playerName = namePopup();
+        List<String> developers = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk")){};
+        if (developers.contains(playerName)) {
+            map.getPlayer().setCheater(true);
+        }
+        return playerName;
     }
 }

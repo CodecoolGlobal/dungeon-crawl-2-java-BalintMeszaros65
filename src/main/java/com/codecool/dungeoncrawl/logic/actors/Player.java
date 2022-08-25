@@ -14,13 +14,14 @@ public class Player extends Actor {
     // TODO name
     // TODO validation based on name
     private Map<String, Integer> inventory;
-
+    private boolean noClip;
     private Direction direction;
 
     public Player(Cell cell) {
-        super(cell, 10000, 1, 1);
+        super(cell, 100, 1, 1);
         this.direction = Direction.NORTH;
         this.inventory = new HashMap<>();
+        this.noClip = false;
     }
 
     @Override
@@ -33,7 +34,11 @@ public class Player extends Actor {
         try {
             closedDoor = "closed-door".equals(getCellNeighborItem(dx, dy).getTileName());
         } catch (NullPointerException | ArrayIndexOutOfBoundsException ignore) {}
-        return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
+        if (noClip) {
+            return true;
+        } else {
+            return !neighborActor && neighborCellTypeFloorOrDoor && !closedDoor;
+        }
     }
 
     @Override
@@ -71,5 +76,10 @@ public class Player extends Actor {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void setCheater(boolean noClip) {
+        this.noClip = noClip;
+        setHealth(10000);
     }
 }
