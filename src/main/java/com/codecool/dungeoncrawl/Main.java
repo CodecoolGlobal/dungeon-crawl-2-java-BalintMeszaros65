@@ -1,9 +1,6 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.Direction;
-import com.codecool.dungeoncrawl.logic.GameMap;
-import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
 import com.codecool.dungeoncrawl.logic.items.HealthPotion;
@@ -19,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -27,16 +25,19 @@ import java.util.Map;
 import java.util.Random;
 
 // TODO sounds
-// TODO map
 // TODO zoom
 public class Main extends Application {
+    GameMap map1 = MapLoader.loadMap("map1");
+    GameMap map2 = MapLoader.loadMap("map2");
+    GameMap map3 = MapLoader.loadMap("map3");
+    GameMap map = map1;
     static Random random = new Random();
-    GameMap map = MapLoader.loadMap();
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     GridPane ui = new GridPane();
+    BorderPane borderPane;
 
     public static void main(String[] args) {
         launch(args);
@@ -47,13 +48,14 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
-        BorderPane borderPane = new BorderPane();
+        borderPane = new BorderPane();
 
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
+        changeMap();
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
 
@@ -139,6 +141,7 @@ public class Main extends Application {
                     break;
             }
             player.updateIsAlive();
+            changeMap();
         }
     }
 
@@ -199,7 +202,7 @@ public class Main extends Application {
                     enemiesToBeRemoved.add(enemy);
                 }
             }
-            for (Actor enemyToBeRemoved: enemiesToBeRemoved) {
+            for (Actor enemyToBeRemoved : enemiesToBeRemoved) {
                 enemies.remove(enemyToBeRemoved);
             }
         }
@@ -211,17 +214,21 @@ public class Main extends Application {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
-                if (cell.hasActor()) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
-                } else if (cell.hasItem()) {
-                    Tiles.drawTile(context, cell.getItem(), x, y);
-                } else {
-                    Tiles.drawTile(context, cell, x, y);
-                }
+                renderArea(x,y);
             }
         }
         fillGridPane();
+    }
+
+    private void renderArea(int x, int y) {
+        Cell cell = map.getCell(x, y);
+        if (cell.hasActor()) {
+            Tiles.drawTile(context, cell.getActor(), x, y);
+        } else if (cell.hasItem()) {
+            Tiles.drawTile(context, cell.getItem(), x, y);
+        } else {
+            Tiles.drawTile(context, cell, x, y);
+        }
     }
 
     private void fillGridPane() {
@@ -233,7 +240,7 @@ public class Main extends Application {
         int positionOnUI = 1;
         for (String key : inventory.keySet()) {
             String itemCount = String.format("%30s", inventory.get(key));
-            ui.add(new Label(key.substring(0,1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
+            ui.add(new Label(key.substring(0, 1).toUpperCase() + key.substring(1) + ":"), 0, positionOnUI);
             ui.add(new Label(itemCount), 0, positionOnUI);
             positionOnUI++;
         }
@@ -249,7 +256,7 @@ public class Main extends Application {
             Button itemButton = new Button("Pick up " + item.getTileName());
             ui.add(itemButton, 0, positionOnUI);
             itemButton.setOnAction(event -> {
-                player.setInventory(item.getTileName());
+                player.putItemToInventory(item.getTileName());
                 player.getCell().setItem(null);
                 refresh();
             });
@@ -281,6 +288,47 @@ public class Main extends Application {
                 refresh();
             });
         }
+    }
+
+    private void changeMap() {
+        if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSUP)) {
+            if (this.map.equals(map3)) {
+                nextMap(map2);
+                refresh();
+            } else if (this.map.equals(map2)) {
+                nextMap(map1);
+                refresh();
+            }
+        } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSDOWN)) {
+            if (this.map.equals(map1)) {
+                nextMap(map2);
+                refresh();
+            } else if (this.map.equals(map2)) {
+                nextMap(map3);
+                refresh();
+            } else if (this.map.equals(map3)) {
+                Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
+                this.borderPane.setCenter(canvas);
+                this.borderPane.setRight(null);
+
+                GraphicsContext context = canvas.getGraphicsContext2D();
+                context.setFill(Color.BLACK);
+                context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                context.setFont(new Font("arial", 42));
+                context.setFill(Color.WHITE);
+                context.fillText("You WIN!", canvas.getWidth() / 2, canvas.getHeight() / 2);
+            }
+        }
+    }
+
+    private void nextMap(GameMap nextMap) {
+        int prevHealth;
+        Map<String, Integer> prevInventory;
+        prevHealth = this.map.getPlayer().getHealth();
+        prevInventory = this.map.getPlayer().getInventory();
+        this.map = nextMap;
+        this.map.getPlayer().setHealth(prevHealth);
+        this.map.getPlayer().setInventory(prevInventory);
     }
 
     public static int randInt(int min, int max) {
