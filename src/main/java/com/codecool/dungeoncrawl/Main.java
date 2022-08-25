@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl;
 import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
+import com.codecool.dungeoncrawl.logic.items.CoinChest;
 import com.codecool.dungeoncrawl.logic.items.HealthPotion;
 import com.codecool.dungeoncrawl.logic.items.Item;
 import javafx.application.Application;
@@ -21,10 +22,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 // TODO sounds
 // TODO zoom
@@ -231,13 +229,27 @@ public class Main extends Application {
         Player player = map.getPlayer();
         if (player.getCell().hasItem()) {
             Item item = player.getCell().getItem();
-            Button itemButton = new Button("Pick up " + item.getTileName());
-            ui.add(itemButton, 0, positionOnUI);
-            itemButton.setOnAction(event -> {
-                player.putItemToInventory(item.getTileName());
-                player.getCell().setItem(null);
-                refresh();
-            });
+            Button itemButton = null;
+            if (Objects.equals(item.getTileName(), "coin-chest")) {
+                itemButton = new Button("Open chest");
+            } else if (!Objects.equals(item.getTileName(), "opened-chest")) {
+                itemButton = new Button("Pick up " + item.getTileName());
+            }
+            if (itemButton != null) {
+                ui.add(itemButton, 0, positionOnUI);
+                itemButton.setOnAction(event -> {
+                    if (!Objects.equals(item.getTileName(), "coin-chest")) {
+                        player.putItemToInventory(item.getTileName());
+                        player.getCell().setItem(null);
+                    } else {
+                        for (int i = 0; i < ((CoinChest) item).getNumberOfCoins(); i++) {
+                            player.putItemToInventory("coin");
+                        }
+                        ((CoinChest) item).lootChest();
+                    }
+                    refresh();
+                });
+            }
         }
     }
 
