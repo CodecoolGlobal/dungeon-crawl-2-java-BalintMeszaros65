@@ -4,9 +4,10 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
+// TODO naming convention _
 public enum Sound {
-    MAINMENU,
-    PLAYGAME,
+    MAIN_MENU,
+    PLAY_GAME,
     MOVE,
     PUNCH,
     SWORDDUEL,
@@ -40,9 +41,9 @@ public enum Sound {
 
     public String toString(Sound sound){
         switch (sound){
-            case MAINMENU:
+            case MAIN_MENU:
                 return "MainMenu.wav";
-            case PLAYGAME:
+            case PLAY_GAME:
                 return "PlayGame.wav";
             case MOVE:
                 return "Move.wav";

@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.Sound;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Direction;
+import com.codecool.dungeoncrawl.logic.items.Shield;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,9 @@ import java.util.Map;
 
 // TODO score
 public class Player extends Actor {
+    // TODO constants like shield
+    // TODO items as constants, linking them
+    private final static String SHIELD = "shield";
     private Map<String, Integer> inventory;
     private boolean noClip;
     private Direction direction;
@@ -81,20 +85,20 @@ public class Player extends Actor {
 
     @Override
     public void sufferDamage(int damage) {
-        if (inventory.containsKey("shield")) {
+        if (inventory.containsKey(SHIELD)) {
             setHealth(getHealth() - damage / 2);
-            removeInventoryItem("shield");
+            removeInventoryItem(SHIELD);
         } else {
             setHealth(getHealth() - damage);
         }
     }
 
     public String getTileName() {
-        if (inventory.containsKey("sword") && inventory.containsKey("shield")) {
+        if (inventory.containsKey("sword") && inventory.containsKey(SHIELD)) {
             return "player";
         } else if (inventory.containsKey("sword")) {
             return "player-with-sword";
-        } else if (inventory.containsKey("shield")) {
+        } else if (inventory.containsKey(SHIELD)) {
             return "player-with-shield";
         } else {
             return "player-naked";

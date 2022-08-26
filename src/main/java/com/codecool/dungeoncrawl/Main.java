@@ -33,7 +33,6 @@ public class Main extends Application {
     GameMap map = map1;
     String playerName = setUpPlayerName();
     static Random random = new Random();
-
     private int roundCounter = 0;
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
@@ -72,75 +71,19 @@ public class Main extends Application {
         int playerDistance = player.getDistance();
         if (player.isAlive()) {
             switch (keyEvent.getCode()) {
-                case Q:
-                    if (player.getInventory().containsKey("health-potion")) {
-                        player.healUp(HealthPotion.getHealsAmount());
-                        player.removeInventoryItem("health-potion");
-                    }
-                    actWithEnemies();
-                    refresh();
-                    break;
-                case W:
-                    if (player.validateMove(0, -playerDistance)) {
-                        player.move(0, -playerDistance);
-                    }
-                    player.setDirection(Direction.NORTH);
-                    actWithEnemies();
-                    refresh();
-                    roundCounter++;
-                    break;
-                case S:
-                    if (player.validateMove(0, playerDistance)) {
-                        player.move(0, playerDistance);
-                    }
-                    player.setDirection(Direction.SOUTH);
-                    actWithEnemies();
-                    refresh();
-                    roundCounter++;
-                    break;
-                case A:
-                    if (player.validateMove(-playerDistance, 0)) {
-                        player.move(-playerDistance, 0);
-                    }
-                    player.setDirection(Direction.WEST);
-                    actWithEnemies();
-                    refresh();
-                    roundCounter++;
-                    break;
-                case D:
-                    if (player.validateMove(playerDistance, 0)) {
-                        player.move(playerDistance, 0);
-                    }
-                    player.setDirection(Direction.EAST);
-                    actWithEnemies();
-                    refresh();
-                    roundCounter++;
-                    break;
-                case ESCAPE:
-                    // TODO exit from game and/or program
-                    break;
+                case Q -> healPlayer(player);
+                case W -> movePlayer(player, 0, -playerDistance, Direction.NORTH);
+                case S -> movePlayer(player, 0, playerDistance, Direction.SOUTH);
+                case A -> movePlayer(player, -playerDistance, 0, Direction.WEST);
+                case D -> movePlayer(player, playerDistance, 0, Direction.EAST);
+                case ESCAPE -> {};
+                // TODO exit from game and/or program
                 case SPACE:
                     switch (player.getDirection()) {
-                        case NORTH:
-                            if (player.isNeighborActor(0, -1)) {
-                                player.attack(0, -1);
-                            }
-                            break;
-                        case SOUTH:
-                            if (player.isNeighborActor(0, 1)) {
-                                player.attack(0, 1);
-                            }
-                            break;
-                        case WEST:
-                            if (player.isNeighborActor(-1, 0)) {
-                                player.attack(-1, 0);
-                            }
-                            break;
-                        case EAST:
-                            if (player.isNeighborActor(1, 0)) {
-                                player.attack(1, 0);
-                            }
-                            break;
+                        case NORTH -> attackWithPlayer(player, 0, -1);
+                        case SOUTH -> attackWithPlayer(player, 0, 1);
+                        case WEST -> attackWithPlayer(player, -1, 0);
+                        case EAST -> attackWithPlayer(player, 1, 0);
                     }
                     actWithEnemies();
                     refresh();
@@ -152,18 +95,42 @@ public class Main extends Application {
             Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
             this.borderPane.setCenter(canvas);
             this.borderPane.setRight(null);
-
             GraphicsContext context = canvas.getGraphicsContext2D();
             context.setFont(new Font("arial", 42));
             context.setFill(Color.INDIANRED);
             context.setTextAlign(TextAlignment.CENTER);
             context.fillText("You died!", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
-        if (roundCounter == 10){
+        if (roundCounter == 10) {
             Sound[] enemiesSound = {Sound.ZOMBIESOUND, Sound.GHOSTSOUND, Sound.SKELETONSOUND};
-            Sound pickedSound = enemiesSound[randInt(0,2)];
+            Sound pickedSound = enemiesSound[randInt(0, 2)];
             pickedSound.playSound(pickedSound.toString());
         }
+    }
+
+    private static void attackWithPlayer(Player player, int dx, int dy) {
+        if (player.isNeighborActor(dx, dy)) {
+            player.attack(dx, dy);
+        }
+    }
+
+    private void movePlayer(Player player, int dx, int playerDistance, Direction north) {
+        if (player.validateMove(dx, playerDistance)) {
+            player.move(dx, playerDistance);
+        }
+        player.setDirection(north);
+        actWithEnemies();
+        refresh();
+        roundCounter++;
+    }
+
+    private void healPlayer(Player player) {
+        if (player.getInventory().containsKey("health-potion")) {
+            player.healUp(HealthPotion.getHealsAmount());
+            player.removeInventoryItem("health-potion");
+        }
+        actWithEnemies();
+        refresh();
     }
 
 

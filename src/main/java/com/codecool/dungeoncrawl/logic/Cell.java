@@ -82,4 +82,5 @@ public class Cell implements Drawable {
     public boolean isCellType(CellType cellType) {
         return type == cellType;
     }
+
 }
