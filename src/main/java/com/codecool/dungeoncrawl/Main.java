@@ -103,7 +103,7 @@ public class Main extends Application {
             context.fillText("You died!", canvas.getWidth() / 2, canvas.getHeight() / 2);
         }
         if (roundCounter == 10) {
-            Sound[] enemiesSound = {Sound.ZOMBIESOUND, Sound.GHOSTSOUND, Sound.SKELETONSOUND};
+            Sound[] enemiesSound = {Sound.ZOMBIE, Sound.GHOST, Sound.SKELETON};
             Sound pickedSound = enemiesSound[randInt(0, 2)];
             pickedSound.playSound(pickedSound.toString());
         }
@@ -257,7 +257,7 @@ public class Main extends Application {
                 player.removeInventoryItem("key");
                 map.getCell(player.getX() + finalClosedDoorPosition[0],
                         player.getY() + finalClosedDoorPosition[1]).setItem(null);
-                Sound.OPENDOOR.playSound("OpenDoor.wav");
+                Sound.OPEN_DOOR.playSound("OpenDoor.wav");
                 refresh();
             });
         }
@@ -267,21 +267,21 @@ public class Main extends Application {
         if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSUP)) {
             if (this.map.equals(map3)) {
                 nextMap(map2);
-                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map1);
-                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             }
         } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSDOWN)) {
             if (this.map.equals(map1)) {
                 nextMap(map2);
-                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map3);
-                Sound.GOINGUPDOWNSTAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map3)) {
                 Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());

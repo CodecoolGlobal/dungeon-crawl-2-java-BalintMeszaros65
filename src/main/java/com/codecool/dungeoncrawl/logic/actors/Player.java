@@ -4,7 +4,6 @@ import com.codecool.dungeoncrawl.Sound;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Direction;
-import com.codecool.dungeoncrawl.logic.items.Shield;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +49,7 @@ public class Player extends Actor {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
         if (inventory.containsKey("sword")) {
-            Sound.SWORDDUEL.playSound(String.valueOf(Sound.SWORDDUEL));
+            Sound.SWORD_DUEL.playSound(String.valueOf(Sound.SWORD_DUEL));
         } else {
             Sound.PUNCH.playSound(String.valueOf(Sound.PUNCH));
         }
@@ -74,7 +73,7 @@ public class Player extends Actor {
                 break;
         }
         if (inventory.containsKey("sword")) {
-            Sound.SWORDDUEL.playSound("SwordDuel.wav");
+            Sound.SWORD_DUEL.playSound("SwordDuel.wav");
         } else {
             Sound.PUNCH.playSound("Punch.wav");
         }
@@ -117,7 +116,7 @@ public class Player extends Actor {
 
     public void putItemToInventory(String string) {
         inventory.merge(string, 1, Integer::sum);
-        Sound.PICKUPITEM.playSound("PickUpItem.wav");
+        Sound.PICK_UP_ITEM.playSound("PickUpItem.wav");
     }
 
     public void removeInventoryItem(String item) {

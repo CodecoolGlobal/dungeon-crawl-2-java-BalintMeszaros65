@@ -4,22 +4,21 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-// TODO naming convention _
 public enum Sound {
     MAIN_MENU,
     PLAY_GAME,
     MOVE,
     PUNCH,
-    SWORDDUEL,
+    SWORD_DUEL,
     DAMAGE,
     DIE,
-    HEALHUP,
-    OPENDOOR,
-    GOINGUPDOWNSTAIRS,
-    PICKUPITEM,
-    ZOMBIESOUND,
-    GHOSTSOUND,
-    SKELETONSOUND;
+    HEAL_UP,
+    OPEN_DOOR,
+    GOING_UP_OR_DOWN_ON_STAIRS,
+    PICK_UP_ITEM,
+    ZOMBIE,
+    GHOST,
+    SKELETON;
 
 
 
@@ -49,25 +48,25 @@ public enum Sound {
                 return "Move.wav";
             case PUNCH:
                 return "Punch.wav";
-            case SWORDDUEL:
+            case SWORD_DUEL:
                 return "SwordDuel";
             case DAMAGE:
                 return "Damage.wav";
             case DIE:
                 return "Die.wav";
-            case HEALHUP:
+            case HEAL_UP:
                 return "HealUp.wav";
-            case OPENDOOR:
+            case OPEN_DOOR:
                 return "OpenDoor.wav";
-            case GOINGUPDOWNSTAIRS:
+            case GOING_UP_OR_DOWN_ON_STAIRS:
                 return "GoingUpDownStairs.wav";
-            case PICKUPITEM:
+            case PICK_UP_ITEM:
                 return "PickUpItem.wav";
-            case ZOMBIESOUND:
+            case ZOMBIE:
                 return "ZombieSound.wav";
-            case GHOSTSOUND:
+            case GHOST:
                 return "GhostSound.wav";
-            case SKELETONSOUND:
+            case SKELETON:
                 return "SkeletonSound.wav";
             default:
                 return "Sound not found";

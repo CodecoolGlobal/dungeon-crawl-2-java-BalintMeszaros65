@@ -152,6 +152,6 @@ public abstract class Actor implements Drawable {
 
     public void healUp(int health) {
         this.health += health;
-        Sound.HEALHUP.playSound("HealUp.wav");
+        Sound.HEAL_UP.playSound("HealUp.wav");
     }
 }
