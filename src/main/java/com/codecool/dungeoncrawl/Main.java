@@ -13,7 +13,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -27,13 +26,11 @@ import java.util.*;
 // TODO sounds
 // TODO zoom
 public class Main extends Application {
-    static final List<String> DEVELOPERS = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk"));
     GameMap map1 = MapLoader.loadMap("map1");
     GameMap map2 = MapLoader.loadMap("map2");
     GameMap map3 = MapLoader.loadMap("map3");
     GameMap map = map1;
-    String playerName = setUpPlayerName();
-    static Random random = new Random();
+    String playerName = Util.setUpPlayerName(map);
     private int roundCounter = 0;
     Canvas canvas = new Canvas(
             map.getWidth() * Tiles.TILE_WIDTH,
@@ -94,7 +91,7 @@ public class Main extends Application {
         }
         if (roundCounter == 10) {
             Sound[] enemiesSound = {Sound.ZOMBIE, Sound.GHOST, Sound.SKELETON};
-            Sound pickedSound = enemiesSound[randInt(0, 2)];
+            Sound pickedSound = enemiesSound[Util.randInt(0, 2)];
             pickedSound.playSound(pickedSound.toString());
         }
     }
@@ -305,25 +302,5 @@ public class Main extends Application {
         if (prevCheater) {
             this.map.getPlayer().setCheater();
         }
-    }
-
-    public static int randInt(int min, int max) {
-        return random.nextInt((max - min) + 1) + min;
-    }
-
-    private String namePopup() {
-        TextInputDialog td = new TextInputDialog("Knighty McKnight");
-        td.setHeaderText("enter your name");
-        td.showAndWait();
-        return td.getEditor().getText();
-    }
-
-    private String setUpPlayerName() {
-        String playerName = namePopup();
-        if (DEVELOPERS.contains(playerName)) {
-            map.getPlayer().setCheater();
-        }
-        map.getPlayer().setName(playerName);
-        return playerName;
     }
 }

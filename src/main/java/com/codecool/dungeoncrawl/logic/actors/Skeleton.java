@@ -1,9 +1,8 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
+import com.codecool.dungeoncrawl.Util;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
-
-import static com.codecool.dungeoncrawl.Main.randInt;
 
 public class Skeleton extends Actor implements DxDyable {
     public Skeleton(Cell cell) {
@@ -19,14 +18,14 @@ public class Skeleton extends Actor implements DxDyable {
         int dx = 0;
         int dy = 0;
         int skeletonDistance = getDistance();
-        if (randInt(0, 1) == 0) {
-            if (randInt(0, 1) == 0) {
+        if (Util.randInt(0, 1) == 0) {
+            if (Util.randInt(0, 1) == 0) {
                 dx = skeletonDistance;
             } else {
                 dx = -skeletonDistance;
             }
         } else {
-            if (randInt(0, 1) == 0) {
+            if (Util.randInt(0, 1) == 0) {
                 dy = skeletonDistance;
             } else {
                 dy = -skeletonDistance;

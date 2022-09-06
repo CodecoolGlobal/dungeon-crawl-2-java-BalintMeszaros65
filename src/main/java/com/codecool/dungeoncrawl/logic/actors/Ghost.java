@@ -1,9 +1,8 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
+import com.codecool.dungeoncrawl.Util;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
-
-import static com.codecool.dungeoncrawl.Main.randInt;
 
 public class Ghost extends Actor implements DxDyable {
 
@@ -28,8 +27,8 @@ public class Ghost extends Actor implements DxDyable {
 
     public int[] getDxDy() {
         int ghostDistance = getDistance();
-        int dx = randInt(-ghostDistance, ghostDistance);
-        int dy = randInt(-ghostDistance, ghostDistance);
+        int dx = Util.randInt(-ghostDistance, ghostDistance);
+        int dy = Util.randInt(-ghostDistance, ghostDistance);
         return new int[] {dx, dy};
     }
 
