@@ -17,8 +17,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -82,12 +80,9 @@ public class Main extends Application {
         } else {
             Util.youMessage(Color.INDIANRED, "You died!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
         }
-        if (roundCounter == 10) {
-            Sound[] enemiesSound = {Sound.ZOMBIE, Sound.GHOST, Sound.SKELETON};
-            Sound pickedSound = enemiesSound[Util.randInt(0, 2)];
-            pickedSound.playSound(pickedSound.toString());
-        }
+        Util.playRandomEnemySoundEveryNTurns(roundCounter,10);
     }
+
 
 
 

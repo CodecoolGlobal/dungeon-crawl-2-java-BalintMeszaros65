@@ -43,6 +43,14 @@ public class Util {
         context.fillText(message, canvas.getWidth() / 2, canvas.getHeight() / 2);
     }
 
+    public static void playRandomEnemySoundEveryNTurns(int roundCounter, int n) {
+        if (roundCounter == n) {
+            Sound[] enemiesSound = {Sound.ZOMBIE, Sound.GHOST, Sound.SKELETON};
+            Sound pickedSound = enemiesSound[Util.randInt(0, 2)];
+            pickedSound.playSound(pickedSound.toString());
+        }
+    }
+
     public static int randInt(int min, int max) {
         return random.nextInt((max - min) + 1) + min;
     }
