@@ -16,7 +16,7 @@ public class Skeleton extends Actor implements DxDyable {
     }
 
     public int[] getDxDy() {
-        Direction randomDirection = Direction.values()[Util.randInt(0, Direction.values().length)];
+        Direction randomDirection = Direction.values()[Util.randInt(0, Direction.values().length - 1)];
         int skeletonDistance = getDistance();
         int dx = randomDirection.getDirectionDCol() * skeletonDistance;
         int dy = randomDirection.getDirectionDRow() * skeletonDistance;
