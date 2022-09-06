@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.actors;
 import com.codecool.dungeoncrawl.Util;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
+import com.codecool.dungeoncrawl.logic.Direction;
 
 public class Skeleton extends Actor implements DxDyable {
     public Skeleton(Cell cell) {
@@ -15,22 +16,10 @@ public class Skeleton extends Actor implements DxDyable {
     }
 
     public int[] getDxDy() {
-        int dx = 0;
-        int dy = 0;
+        Direction randomDirection = Direction.values()[Util.randInt(0, Direction.values().length)];
         int skeletonDistance = getDistance();
-        if (Util.randInt(0, 1) == 0) {
-            if (Util.randInt(0, 1) == 0) {
-                dx = skeletonDistance;
-            } else {
-                dx = -skeletonDistance;
-            }
-        } else {
-            if (Util.randInt(0, 1) == 0) {
-                dy = skeletonDistance;
-            } else {
-                dy = -skeletonDistance;
-            }
-        }
+        int dx = randomDirection.getDirectionDCol() * skeletonDistance;
+        int dy = randomDirection.getDirectionDRow() * skeletonDistance;
         return new int[] {dx, dy};
     }
 
