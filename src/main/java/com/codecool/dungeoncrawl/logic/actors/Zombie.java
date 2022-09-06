@@ -20,19 +20,7 @@ public class Zombie extends Actor{
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 if (i != 0 || j != 0) {
-                    if (isNeighborActor(i, j)) {
-                        if (getCellNeighborActor(i, j) instanceof Player) {
-                            attack(i, j);
-                        } else {
-                            if (validateMove(i, j)) {
-                                move(i, j);
-                            }
-                        }
-                    } else {
-                        if (validateMove(i, j)) {
-                            move(i, j);
-                        }
-                    }
+                    super.act(i, j);
                 }
             }
         }
