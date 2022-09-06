@@ -80,20 +80,24 @@ public class Main extends Application {
             player.updateIsAlive();
             changeMap();
         } else {
-            Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
-            this.borderPane.setCenter(canvas);
-            this.borderPane.setRight(null);
-            GraphicsContext context = canvas.getGraphicsContext2D();
-            context.setFont(new Font("arial", 42));
-            context.setFill(Color.INDIANRED);
-            context.setTextAlign(TextAlignment.CENTER);
-            context.fillText("You died!", canvas.getWidth() / 2, canvas.getHeight() / 2);
+            youMessage(Color.INDIANRED, "You died!");
         }
         if (roundCounter == 10) {
             Sound[] enemiesSound = {Sound.ZOMBIE, Sound.GHOST, Sound.SKELETON};
             Sound pickedSound = enemiesSound[Util.randInt(0, 2)];
             pickedSound.playSound(pickedSound.toString());
         }
+    }
+
+    private void youMessage(Color color, String message) {
+        Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
+        this.borderPane.setCenter(canvas);
+        this.borderPane.setRight(null);
+        GraphicsContext context = canvas.getGraphicsContext2D();
+        context.setFont(new Font("arial", 42));
+        context.setFill(color);
+        context.setTextAlign(TextAlignment.CENTER);
+        context.fillText(message, canvas.getWidth() / 2, canvas.getHeight() / 2);
     }
 
     private void attackWithPlayer(Player player) {
@@ -276,15 +280,7 @@ public class Main extends Application {
                 Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             } else if (this.map.equals(map3)) {
-                Canvas canvas = new Canvas(this.canvas.getWidth(), this.canvas.getHeight());
-                this.borderPane.setCenter(canvas);
-                this.borderPane.setRight(null);
-
-                GraphicsContext context = canvas.getGraphicsContext2D();
-                context.setFont(new Font("arial", 42));
-                context.setFill(Color.BLACK);
-                context.setTextAlign(TextAlignment.CENTER);
-                context.fillText("You WIN!", canvas.getWidth() / 2, canvas.getHeight() / 2);
+                youMessage(Color.BLACK, "You WIN!");
             }
         }
     }
