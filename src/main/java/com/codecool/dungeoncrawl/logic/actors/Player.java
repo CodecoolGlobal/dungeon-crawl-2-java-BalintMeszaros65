@@ -30,8 +30,8 @@ public class Player extends Actor {
     public boolean validateMove(int dx, int dy) {
         boolean neighborActor = isNeighborActor(dx, dy);
         boolean neighborCellTypeFloorOrDoor = isNeighborCellType(dx, dy, CellType.FLOOR) ||
-                isNeighborCellType(dx, dy, CellType.DOOR) || isNeighborCellType(dx, dy, CellType.STAIRSDOWN) ||
-                isNeighborCellType(dx, dy, CellType.STAIRSUP);
+                isNeighborCellType(dx, dy, CellType.DOOR) || isNeighborCellType(dx, dy, CellType.STAIRS_DOWN) ||
+                isNeighborCellType(dx, dy, CellType.STAIRS_UP);
         boolean closedDoor = false;
         try {
             closedDoor = "closed-door".equals(getCellNeighborItem(dx, dy).getTileName());

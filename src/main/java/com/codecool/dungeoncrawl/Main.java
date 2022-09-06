@@ -248,7 +248,7 @@ public class Main extends Application {
     }
 
     private void changeMap() {
-        if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSUP)) {
+        if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_UP)) {
             if (this.map.equals(map3)) {
                 nextMap(map2);
                 Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
@@ -258,7 +258,7 @@ public class Main extends Application {
                 Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
                 refresh();
             }
-        } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRSDOWN)) {
+        } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_DOWN)) {
             if (this.map.equals(map1)) {
                 nextMap(map2);
                 Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");

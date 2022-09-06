@@ -71,10 +71,10 @@ public class MapLoader {
                             map.setItem(new Sword(cell));
                             break;
                          case '^':
-                            cell.setType(CellType.STAIRSUP);
+                            cell.setType(CellType.STAIRS_UP);
                             break;
                         case 'v':
-                            cell.setType(CellType.STAIRSDOWN);
+                            cell.setType(CellType.STAIRS_DOWN);
                             break;
                         case ')':
                             cell.setType(CellType.FLOOR);
