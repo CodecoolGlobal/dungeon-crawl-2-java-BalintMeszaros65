@@ -69,27 +69,16 @@ public class Main extends Application {
 
     private void onKeyPressed(KeyEvent keyEvent) {
         Player player = map.getPlayer();
-        int playerDistance = player.getDistance();
         if (player.isAlive()) {
             switch (keyEvent.getCode()) {
                 case Q -> healPlayer(player);
-                case W -> movePlayer(player, 0, -playerDistance, Direction.NORTH);
-                case S -> movePlayer(player, 0, playerDistance, Direction.SOUTH);
-                case A -> movePlayer(player, -playerDistance, 0, Direction.WEST);
-                case D -> movePlayer(player, playerDistance, 0, Direction.EAST);
-                case ESCAPE -> System.out.println("Implement me f'ers!");
+                case W -> movePlayer(player, Direction.NORTH);
+                case S -> movePlayer(player, Direction.SOUTH);
+                case A -> movePlayer(player, Direction.WEST);
+                case D -> movePlayer(player, Direction.EAST);
                 // TODO exit from game and/or program
-                case SPACE -> {
-                    switch (player.getDirection()) {
-                        case NORTH -> attackWithPlayer(player, 0, -1);
-                        case SOUTH -> attackWithPlayer(player, 0, 1);
-                        case WEST -> attackWithPlayer(player, -1, 0);
-                        case EAST -> attackWithPlayer(player, 1, 0);
-                    }
-                    actWithEnemies();
-                    refresh();
-                    break;
-                }
+                case ESCAPE -> System.out.println("Implement me f'ers!");
+                case SPACE -> attackWithPlayer(player);
             }
             player.updateIsAlive();
             changeMap();
@@ -110,17 +99,25 @@ public class Main extends Application {
         }
     }
 
-    private static void attackWithPlayer(Player player, int dx, int dy) {
-        if (player.isNeighborActor(dx, dy)) {
-            player.attack(dx, dy);
+    private void attackWithPlayer(Player player) {
+        int dRow = player.getDirection().getDirectionDRow();
+        int dCol = player.getDirection().getDirectionDCol();
+        if (player.isNeighborActor(dCol, dRow)) {
+            player.attack(dCol, dRow);
         }
+        actWithEnemies();
+        refresh();
+        roundCounter++;
     }
 
-    private void movePlayer(Player player, int dx, int playerDistance, Direction north) {
-        if (player.validateMove(dx, playerDistance)) {
-            player.move(dx, playerDistance);
+    private void movePlayer(Player player, Direction direction) {
+        int dRow = direction.getDirectionDRow();
+        int dCol = direction.getDirectionDCol();
+        int distance = player.getDistance();
+        if (player.validateMove(dCol * distance, dRow * distance)) {
+            player.move(dCol * distance, dRow * distance);
         }
-        player.setDirection(north);
+        player.setDirection(direction);
         actWithEnemies();
         refresh();
         roundCounter++;
