@@ -27,6 +27,7 @@ import java.util.*;
 // TODO sounds
 // TODO zoom
 public class Main extends Application {
+    static final List<String> DEVELOPERS = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk"));
     GameMap map1 = MapLoader.loadMap("map1");
     GameMap map2 = MapLoader.loadMap("map2");
     GameMap map3 = MapLoader.loadMap("map3");
@@ -325,9 +326,7 @@ public class Main extends Application {
 
     private String setUpPlayerName() {
         String playerName = namePopup();
-        List<String> developers = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk")) {
-        };
-        if (developers.contains(playerName)) {
+        if (DEVELOPERS.contains(playerName)) {
             map.getPlayer().setCheater();
         }
         map.getPlayer().setName(playerName);
