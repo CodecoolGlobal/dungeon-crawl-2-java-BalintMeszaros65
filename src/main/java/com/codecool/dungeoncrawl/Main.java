@@ -83,15 +83,14 @@ public class Main extends Application {
         Util.playRandomEnemySoundEveryNTurns(roundCounter,10);
     }
 
-
-
-
     private void attackWithPlayer(Player player) {
         int dRow = player.getDirection().getDirectionDRow();
         int dCol = player.getDirection().getDirectionDCol();
         if (player.isNeighborActor(dCol, dRow)) {
             player.attack(dCol, dRow);
         }
+        actWithEnemies();
+        roundCounter++;
         refresh();
     }
 
@@ -103,6 +102,8 @@ public class Main extends Application {
             player.move(dCol * distance, dRow * distance);
         }
         player.setDirection(direction);
+        actWithEnemies();
+        roundCounter++;
         refresh();
     }
 
@@ -111,6 +112,8 @@ public class Main extends Application {
             player.healUp(HealthPotion.getHealsAmount());
             player.removeInventoryItem("health-potion");
         }
+        actWithEnemies();
+        roundCounter++;
         refresh();
     }
 
@@ -146,8 +149,6 @@ public class Main extends Application {
 
 
     private void refresh() {
-        actWithEnemies();
-        roundCounter++;
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
@@ -214,6 +215,7 @@ public class Main extends Application {
                 });
             }
         }
+
     }
 
     private void addDoorButton(int positionOnUI) {
