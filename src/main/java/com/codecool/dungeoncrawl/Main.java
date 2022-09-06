@@ -105,9 +105,7 @@ public class Main extends Application {
         if (player.isNeighborActor(dCol, dRow)) {
             player.attack(dCol, dRow);
         }
-        actWithEnemies();
         refresh();
-        roundCounter++;
     }
 
     private void movePlayer(Player player, Direction direction) {
@@ -118,9 +116,7 @@ public class Main extends Application {
             player.move(dCol * distance, dRow * distance);
         }
         player.setDirection(direction);
-        actWithEnemies();
         refresh();
-        roundCounter++;
     }
 
     private void healPlayer(Player player) {
@@ -128,7 +124,6 @@ public class Main extends Application {
             player.healUp(HealthPotion.getHealsAmount());
             player.removeInventoryItem("health-potion");
         }
-        actWithEnemies();
         refresh();
     }
 
@@ -164,6 +159,8 @@ public class Main extends Application {
 
 
     private void refresh() {
+        actWithEnemies();
+        roundCounter++;
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < map.getWidth(); x++) {
