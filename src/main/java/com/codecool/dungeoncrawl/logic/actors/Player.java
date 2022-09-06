@@ -57,27 +57,12 @@ public class Player extends Actor {
     }
 
     private void retaliation() {
-        Actor enemy = null;
-        switch (direction) {
-            case NORTH:
-                enemy = getCellNeighborActor(0, -1);
-                break;
-            case SOUTH:
-                enemy = getCellNeighborActor(0, 1);
-                break;
-            case WEST:
-                enemy = getCellNeighborActor(-1, 0);
-                break;
-            case EAST:
-                enemy = getCellNeighborActor(1, 0);
-                break;
-        }
+        Actor enemy = getCellNeighborActor(direction.getDirectionDCol(), direction.getDirectionDRow());
         if (inventory.containsKey("sword")) {
             Sound.SWORD_DUEL.playSound("SwordDuel.wav");
         } else {
             Sound.PUNCH.playSound("Punch.wav");
         }
-
         enemy.updateIsAlive();
         if (enemy.isAlive()) {
             sufferDamage(enemy.getDamage());
