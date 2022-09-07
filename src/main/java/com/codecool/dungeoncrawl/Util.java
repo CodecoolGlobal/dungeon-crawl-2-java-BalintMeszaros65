@@ -44,7 +44,7 @@ public class Util {
     }
 
     public static void playRandomEnemySoundEveryNTurns(int roundCounter, int n) {
-        if (roundCounter == n) {
+        if (roundCounter % n == 0) {
             Sound[] enemiesSound = {Sound.ZOMBIE, Sound.GHOST, Sound.SKELETON};
             Sound pickedSound = enemiesSound[Util.randInt(0, 2)];
             pickedSound.playSound();
