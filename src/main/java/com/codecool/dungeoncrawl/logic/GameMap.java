@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.items.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GameMap {
     private final int width;
@@ -29,6 +30,21 @@ public class GameMap {
         }
         this.enemies = new ArrayList<>();
         this.items = new ArrayList<>();
+    }
+
+    public GameMap changeMap(GameMap nextMap) {
+        int prevHealth;
+        boolean prevCheater;
+        Map<String, Integer> prevInventory;
+        prevHealth = this.getPlayer().getHealth();
+        prevInventory = this.getPlayer().getInventory();
+        prevCheater = this.getPlayer().getCheater();
+        nextMap.getPlayer().setHealth(prevHealth);
+        nextMap.getPlayer().setInventory(prevInventory);
+        if (prevCheater) {
+            nextMap.getPlayer().setCheater();
+        }
+        return nextMap;
     }
 
     public Cell getCell(int x, int y) {

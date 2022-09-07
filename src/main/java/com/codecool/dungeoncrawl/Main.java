@@ -53,7 +53,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
-        changeMap();
+        useStairs();
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
 
@@ -76,7 +76,7 @@ public class Main extends Application {
                 case SPACE -> attackWithPlayerAndMakeTurn(player);
             }
             player.updateIsAlive();
-            changeMap();
+            useStairs();
         } else {
             Util.youMessage(Color.INDIANRED, "You died!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
         }
@@ -261,44 +261,24 @@ public class Main extends Application {
         }
     }
 
-    private void changeMap() {
+    private void useStairs() {
         if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_UP)) {
             if (this.map.equals(map3)) {
-                nextMap(map2);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
-                refresh();
+                this.map = map.changeMap(map2);
             } else if (this.map.equals(map2)) {
-                nextMap(map1);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
-                refresh();
+                this.map = map.changeMap(map1);
             }
+            Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
         } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_DOWN)) {
             if (this.map.equals(map1)) {
-                nextMap(map2);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
-                refresh();
+                this.map = map.changeMap(map2);
             } else if (this.map.equals(map2)) {
-                nextMap(map3);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
-                refresh();
+                this.map = map.changeMap(map3);
             } else if (this.map.equals(map3)) {
                 Util.youMessage(Color.BLACK, "You WIN!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
             }
+            Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
         }
-    }
-
-    private void nextMap(GameMap nextMap) {
-        int prevHealth;
-        boolean prevCheater;
-        Map<String, Integer> prevInventory;
-        prevHealth = this.map.getPlayer().getHealth();
-        prevInventory = this.map.getPlayer().getInventory();
-        prevCheater = this.map.getPlayer().getCheater();
-        this.map = nextMap;
-        this.map.getPlayer().setHealth(prevHealth);
-        this.map.getPlayer().setInventory(prevInventory);
-        if (prevCheater) {
-            this.map.getPlayer().setCheater();
-        }
+        refresh();
     }
 }
