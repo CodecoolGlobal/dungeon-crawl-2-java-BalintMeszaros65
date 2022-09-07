@@ -24,9 +24,9 @@ public enum Sound {
     Sound(String s) {
     }
 
-    public void playSound(String soundFile) {
+    public void playSound() {
         try {
-            File f = new File("sounds/" + soundFile);
+            File f = new File("sounds/" + String.valueOf(this));
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);

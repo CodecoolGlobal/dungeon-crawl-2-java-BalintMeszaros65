@@ -241,7 +241,7 @@ public class Main extends Application {
                 player.removeInventoryItem("key");
                 map.getCell(player.getX() + finalClosedDoorPosition[0],
                         player.getY() + finalClosedDoorPosition[1]).setItem(null);
-                Sound.OPEN_DOOR.playSound("OpenDoor.wav");
+                Sound.OPEN_DOOR.playSound();
                 refresh();
             });
         }
@@ -251,21 +251,21 @@ public class Main extends Application {
         if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_UP)) {
             if (this.map.equals(map3)) {
                 nextMap(map2);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map1);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
                 refresh();
             }
         } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_DOWN)) {
             if (this.map.equals(map1)) {
                 nextMap(map2);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
                 refresh();
             } else if (this.map.equals(map2)) {
                 nextMap(map3);
-                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound("GoingUpDownStairs.wav");
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
                 refresh();
             } else if (this.map.equals(map3)) {
                 Util.youMessage(Color.BLACK, "You WIN!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);

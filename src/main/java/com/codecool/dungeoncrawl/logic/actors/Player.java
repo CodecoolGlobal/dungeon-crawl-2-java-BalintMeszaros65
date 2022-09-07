@@ -49,9 +49,9 @@ public class Player extends Actor {
         this.getCellNeighborActor(dx, dy).sufferDamage(
                 this.getDamage() + inventory.getOrDefault("sword", 0));
         if (inventory.containsKey("sword")) {
-            Sound.SWORD_DUEL.playSound(String.valueOf(Sound.SWORD_DUEL));
+            Sound.SWORD_DUEL.playSound();
         } else {
-            Sound.PUNCH.playSound(String.valueOf(Sound.PUNCH));
+            Sound.PUNCH.playSound();
         }
         retaliation();
     }
@@ -59,9 +59,9 @@ public class Player extends Actor {
     private void retaliation() {
         Actor enemy = getCellNeighborActor(direction.getDirectionDCol(), direction.getDirectionDRow());
         if (inventory.containsKey("sword")) {
-            Sound.SWORD_DUEL.playSound("SwordDuel.wav");
+            Sound.SWORD_DUEL.playSound();
         } else {
-            Sound.PUNCH.playSound("Punch.wav");
+            Sound.PUNCH.playSound();
         }
         enemy.updateIsAlive();
         if (enemy.isAlive()) {
@@ -101,7 +101,7 @@ public class Player extends Actor {
 
     public void putItemToInventory(String string) {
         inventory.merge(string, 1, Integer::sum);
-        Sound.PICK_UP_ITEM.playSound("PickUpItem.wav");
+        Sound.PICK_UP_ITEM.playSound();
     }
 
     public void removeInventoryItem(String item) {
