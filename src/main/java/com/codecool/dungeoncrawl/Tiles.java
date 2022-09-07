@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tiles {
+    public static  double SCALE = 2.3; //magical perfect number for scaling
     public static int TILE_WIDTH = 32;
 
     private static final Image tileset = new Image("/tiles.png", 543 * 2, 543 * 2, true, false);
@@ -49,6 +50,6 @@ public class Tiles {
     public static void drawTile(GraphicsContext context, Drawable d, int x, int y) {
         Tile tile = tileMap.get(d.getTileName());
         context.drawImage(tileset, tile.x, tile.y, tile.w, tile.h,
-                x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+                x * TILE_WIDTH * SCALE, y * TILE_WIDTH * SCALE, TILE_WIDTH * SCALE, TILE_WIDTH * SCALE);
     }
 }

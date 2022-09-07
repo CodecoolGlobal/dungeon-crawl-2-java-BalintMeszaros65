@@ -46,9 +46,11 @@ public class Main extends Application {
         Util.canvasWidth = map.getWidth() * Tiles.TILE_WIDTH;
         Util.canvasHeight = map.getHeight() * Tiles.TILE_WIDTH;
         canvas = new Canvas(Util.canvasWidth, Util.canvasHeight);
+        canvas.setScaleY(1.5);
+        canvas.setScaleX(1.5);
         context = canvas.getGraphicsContext2D();
-        map1.setNextMap(map2);
         context.setImageSmoothing(false);
+        map1.setNextMap(map2);
         map2.setPrevMap(map1);
         map2.setNextMap(map3);
         map3.setPrevMap(map2);
@@ -174,7 +176,7 @@ public class Main extends Application {
         int maxWidth = map.getWidth();
         int pX = map.getPlayer().getX();
         int pY = map.getPlayer().getY();
-        int xDif = 6;
+        int xDif = 5;
         int yDif = 4;
         int startX;
         int startY;
@@ -196,21 +198,17 @@ public class Main extends Application {
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = startX - xDif; x < startX + xDif + 1; x++) {
             for (int y = startY - yDif; y < startY + yDif + 1; y++) {
-                renderArea(x, y);
+                Cell cell = map.getCell(x, y);
+                if (cell.hasActor()) {
+                    Tiles.drawTile(context, cell.getActor(), x - startX + xDif, y - startY + yDif);
+                } else if (cell.hasItem()) {
+                    Tiles.drawTile(context, cell.getItem(), x - startX + xDif, y - startY + yDif);
+                } else {
+                    Tiles.drawTile(context, cell, x - startX + xDif, y - startY + yDif);
+                }
             }
         }
         fillGridPane();
-    }
-
-    private void renderArea(int x, int y) {
-        Cell cell = map.getCell(x, y);
-        if (cell.hasActor()) {
-            Tiles.drawTile(context, cell.getActor(), x, y);
-        } else if (cell.hasItem()) {
-            Tiles.drawTile(context, cell.getItem(), x, y);
-        } else {
-            Tiles.drawTile(context, cell, x, y);
-        }
     }
 
     private void fillGridPane() {
