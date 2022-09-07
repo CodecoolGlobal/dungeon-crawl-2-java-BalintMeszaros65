@@ -41,7 +41,7 @@ public abstract class Actor implements Drawable {
         Cell nextCell = cell.getNeighbor(dx, dy);
         if (nextCell != null) {
             if (this instanceof Player){
-                Sound.MOVE.playSound("Move.wav");
+                Sound.MOVE.playSound();
             }
             cell.setActor(null);
             nextCell.setActor(this);
@@ -51,7 +51,7 @@ public abstract class Actor implements Drawable {
 
     public void sufferDamage (int damage) {
         this.health -= damage;
-        Sound.DAMAGE.playSound("Damage.wav");
+        Sound.DAMAGE.playSound();
     }
 
     public int getHealth() {
@@ -125,7 +125,7 @@ public abstract class Actor implements Drawable {
 
     public void updateIsAlive() {
         if (health <= 0) {
-            Sound.DIE.playSound("Die.wav");
+            Sound.DIE.playSound();
             isAlive = false;
         }
     }
@@ -152,6 +152,6 @@ public abstract class Actor implements Drawable {
 
     public void healUp(int health) {
         this.health += health;
-        Sound.HEAL_UP.playSound("HealUp.wav");
+        Sound.HEAL_UP.playSound();
     }
 }
