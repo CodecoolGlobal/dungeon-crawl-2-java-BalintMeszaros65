@@ -1,9 +1,13 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
+import com.codecool.dungeoncrawl.Main;
 import com.codecool.dungeoncrawl.Sound;
+import com.codecool.dungeoncrawl.Util;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Direction;
+import com.codecool.dungeoncrawl.logic.GameMap;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -134,5 +138,35 @@ public class Player extends Actor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void move(int dx, int dy) {
+        Sound.MOVE.playSound();
+        Cell currentCell = getCell();
+        Cell nextCell = currentCell.getNeighbor(dx, dy);
+        super.move(dx, dy);
+        if (nextCell.isCellType(CellType.STAIRS_UP) || nextCell.isCellType(CellType.STAIRS_DOWN)) {
+            useStairs();
+        }
+    }
+
+    private void useStairs() {
+        Cell currentCell = getCell();
+        if (currentCell.isCellType(CellType.STAIRS_UP)) {
+            GameMap prevMap = currentCell.getGameMap().getPrevMap();
+            if (prevMap != null) {
+                Main.changeMap(prevMap, this);
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
+            }
+        } else if (currentCell.isCellType(CellType.STAIRS_DOWN)) {
+            GameMap nextMap = currentCell.getGameMap().getNextMap();
+           if (nextMap == null)   {
+               Util.youMessage(Color.BLACK, "You WIN!");
+           } else {
+               Main.changeMap(nextMap, this);
+               Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
+           }
+        }
     }
 }

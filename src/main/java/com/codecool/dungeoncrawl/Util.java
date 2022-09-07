@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Util {
+    static double canvasWidth;
+    static double canvasHeight;
+    static BorderPane borderPane;
     static Random random = new Random();
     static final List<String> DEVELOPERS = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk"));
     private static String namePopup() {
@@ -32,8 +35,8 @@ public class Util {
         return playerName;
     }
 
-    public static void youMessage(Color color, String message, double width, double height, BorderPane borderPane) {
-        Canvas canvas = new Canvas(width, height);
+    public static void youMessage(Color color, String message) {
+        Canvas canvas = new Canvas(canvasWidth, canvasHeight);
         borderPane.setCenter(canvas);
         borderPane.setRight(null);
         GraphicsContext context = canvas.getGraphicsContext2D();

@@ -19,6 +19,9 @@ public class GameMap {
 
     private List<Item> items;
 
+    private GameMap prevMap;
+    private GameMap nextMap;
+
     public GameMap(int width, int height, CellType defaultCellType) {
         this.width = width;
         this.height = height;
@@ -30,21 +33,8 @@ public class GameMap {
         }
         this.enemies = new ArrayList<>();
         this.items = new ArrayList<>();
-    }
-
-    public GameMap changeMap(GameMap nextMap) {
-        int prevHealth;
-        boolean prevCheater;
-        Map<String, Integer> prevInventory;
-        prevHealth = this.getPlayer().getHealth();
-        prevInventory = this.getPlayer().getInventory();
-        prevCheater = this.getPlayer().getCheater();
-        nextMap.getPlayer().setHealth(prevHealth);
-        nextMap.getPlayer().setInventory(prevInventory);
-        if (prevCheater) {
-            nextMap.getPlayer().setCheater();
-        }
-        return nextMap;
+        this.prevMap = null;
+        this.nextMap = null;
     }
 
     public Cell getCell(int x, int y) {
@@ -77,5 +67,21 @@ public class GameMap {
 
     public void setItem(Item item) {
         this.items.add(item);
+    }
+
+    public GameMap getPrevMap() {
+        return prevMap;
+    }
+
+    public void setPrevMap(GameMap prevMap) {
+        this.prevMap = prevMap;
+    }
+
+    public GameMap getNextMap() {
+        return nextMap;
+    }
+
+    public void setNextMap(GameMap nextMap) {
+        this.nextMap = nextMap;
     }
 }

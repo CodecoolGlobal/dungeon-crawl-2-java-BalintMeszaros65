@@ -82,4 +82,8 @@ public class Cell implements Drawable {
         return type == cellType;
     }
 
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
 }

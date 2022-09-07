@@ -27,13 +27,11 @@ public class Main extends Application {
     GameMap map1 = MapLoader.loadMap("map1");
     GameMap map2 = MapLoader.loadMap("map2");
     GameMap map3 = MapLoader.loadMap("map3");
-    GameMap map = map1;
-    String playerName = Util.setUpPlayerName(map);
+    static GameMap map;
+    String playerName;
     private int roundCounter = 0;
-    Canvas canvas = new Canvas(
-            map.getWidth() * Tiles.TILE_WIDTH,
-            map.getHeight() * Tiles.TILE_WIDTH);
-    GraphicsContext context = canvas.getGraphicsContext2D();
+    Canvas canvas;
+    GraphicsContext context;
     GridPane ui = new GridPane();
     BorderPane borderPane;
 
@@ -43,6 +41,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        map = map1;
+        playerName = Util.setUpPlayerName(map);
+        Util.canvasWidth = map.getWidth() * Tiles.TILE_WIDTH;
+        Util.canvasHeight = map.getHeight() * Tiles.TILE_WIDTH;
+        canvas = new Canvas(Util.canvasWidth, Util.canvasHeight);
+        context = canvas.getGraphicsContext2D();
+        map1.setNextMap(map2);
+        map2.setPrevMap(map1);
+        map2.setNextMap(map3);
+        map3.setPrevMap(map2);
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
@@ -50,10 +58,9 @@ public class Main extends Application {
 
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
-
+        Util.borderPane = this.borderPane;
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
-        useStairs();
         refresh();
         scene.setOnKeyPressed(this::onKeyPressed);
 
@@ -76,9 +83,8 @@ public class Main extends Application {
                 case SPACE -> attackWithPlayerAndMakeTurn(player);
             }
             player.updateIsAlive();
-            useStairs();
         } else {
-            Util.youMessage(Color.INDIANRED, "You died!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
+            Util.youMessage(Color.INDIANRED, "You died!");
         }
         Sound.playRandomEnemySoundEveryNTurns(roundCounter);
     }
@@ -261,24 +267,18 @@ public class Main extends Application {
         }
     }
 
-    private void useStairs() {
-        if (map.getPlayer().getCell().isCellType(CellType.STAIRS_UP)) {
-            if (this.map.equals(map3)) {
-                this.map = map.changeMap(map2);
-            } else if (this.map.equals(map2)) {
-                this.map = map.changeMap(map1);
-            }
-            Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
-        } else if (map.getPlayer().getCell().isCellType(CellType.STAIRS_DOWN)) {
-            if (this.map.equals(map1)) {
-                this.map = map.changeMap(map2);
-            } else if (this.map.equals(map2)) {
-                this.map = map.changeMap(map3);
-            } else if (this.map.equals(map3)) {
-                Util.youMessage(Color.BLACK, "You WIN!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
-            }
-            Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
+    public static void changeMap(GameMap nextMap, Player player) {
+        int prevHealth;
+        boolean prevCheater;
+        Map<String, Integer> prevInventory;
+        prevHealth = player.getHealth();
+        prevInventory = player.getInventory();
+        prevCheater = player.getCheater();
+        nextMap.getPlayer().setHealth(prevHealth);
+        nextMap.getPlayer().setInventory(prevInventory);
+        if (prevCheater) {
+            nextMap.getPlayer().setCheater();
         }
-        refresh();
+        map = nextMap;
     }
 }
