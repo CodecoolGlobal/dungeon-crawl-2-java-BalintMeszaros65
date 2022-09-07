@@ -66,21 +66,21 @@ public class Main extends Application {
         Player player = map.getPlayer();
         if (player.isAlive()) {
             switch (keyEvent.getCode()) {
-                case Q -> healPlayer(player);
-                case W -> movePlayer(player, Direction.NORTH);
-                case S -> movePlayer(player, Direction.SOUTH);
-                case A -> movePlayer(player, Direction.WEST);
-                case D -> movePlayer(player, Direction.EAST);
+                case Q -> healPlayerAndMakeTurn(player);
+                case W -> movePlayerAndMakeTurn(player, Direction.NORTH);
+                case S -> movePlayerAndMakeTurn(player, Direction.SOUTH);
+                case A -> movePlayerAndMakeTurn(player, Direction.WEST);
+                case D -> movePlayerAndMakeTurn(player, Direction.EAST);
                 // TODO exit from game and/or program
                 case ESCAPE -> System.out.println("Implement me f'ers!");
-                case SPACE -> attackWithPlayer(player);
+                case SPACE -> attackWithPlayerAndMakeTurn(player);
             }
             player.updateIsAlive();
             useStairs();
         } else {
             Util.youMessage(Color.INDIANRED, "You died!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
         }
-        Util.playRandomEnemySoundEveryNTurns(roundCounter,10);
+        Util.playRandomEnemySoundEveryNTurns(roundCounter);
     }
 
     private void attackWithPlayer(Player player) {
@@ -89,9 +89,11 @@ public class Main extends Application {
         if (player.isNeighborActor(dCol, dRow)) {
             player.attack(dCol, dRow);
         }
-        actWithEnemies();
-        roundCounter++;
-        refresh();
+    }
+
+    private void attackWithPlayerAndMakeTurn(Player player) {
+        attackWithPlayer(player);
+        makeTurn();
     }
 
     private void movePlayer(Player player, Direction direction) {
@@ -102,9 +104,11 @@ public class Main extends Application {
             player.move(dCol * distance, dRow * distance);
         }
         player.setDirection(direction);
-        actWithEnemies();
-        roundCounter++;
-        refresh();
+    }
+
+    private void movePlayerAndMakeTurn(Player player, Direction direction) {
+        movePlayer(player, direction);
+        makeTurn();
     }
 
     private void healPlayer(Player player) {
@@ -112,11 +116,18 @@ public class Main extends Application {
             player.healUp(HealthPotion.getHealsAmount());
             player.removeInventoryItem("health-potion");
         }
+    }
+
+    private void healPlayerAndMakeTurn(Player player) {
+        healPlayer(player);
+        makeTurn();
+    }
+
+    private void makeTurn() {
         actWithEnemies();
         roundCounter++;
         refresh();
     }
-
 
     private void actWithEnemies() {
         List<Actor> enemies = map.getEnemies();

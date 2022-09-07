@@ -20,13 +20,14 @@ public enum Sound {
     GHOST("GhostSound.wav"),
     SKELETON("SkeletonSound.wav");
 
-
-    Sound(String s) {
+    private final String soundText;
+    Sound(String string) {
+        this.soundText = string;
     }
 
     public void playSound() {
         try {
-            File f = new File("sounds/" + String.valueOf(this));
+            File f = new File("sounds/" + this.soundText);
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
