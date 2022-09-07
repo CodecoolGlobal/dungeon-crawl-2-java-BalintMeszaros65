@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Util {
+    private final static int ENEMY_SOUND_TIMER = 10;
     static Random random = new Random();
     static final List<String> DEVELOPERS = new ArrayList<>(List.of("Ágoston", "Ákos", "Bálint", "Márk"));
     private static String namePopup() {
@@ -43,8 +44,8 @@ public class Util {
         context.fillText(message, canvas.getWidth() / 2, canvas.getHeight() / 2);
     }
 
-    public static void playRandomEnemySoundEveryNTurns(int roundCounter, int n) {
-        if (roundCounter % n == 0) {
+    public static void playRandomEnemySoundEveryNTurns(int roundCounter) {
+        if (roundCounter % ENEMY_SOUND_TIMER == 0) {
             Sound[] enemiesSound = {Sound.ZOMBIE, Sound.GHOST, Sound.SKELETON};
             Sound pickedSound = enemiesSound[Util.randInt(0, 2)];
             pickedSound.playSound();

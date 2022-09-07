@@ -80,7 +80,7 @@ public class Main extends Application {
         } else {
             Util.youMessage(Color.INDIANRED, "You died!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
         }
-        Util.playRandomEnemySoundEveryNTurns(roundCounter,10);
+        Util.playRandomEnemySoundEveryNTurns(roundCounter);
     }
 
     private void attackWithPlayer(Player player) {
