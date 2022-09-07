@@ -48,6 +48,7 @@ public class Main extends Application {
         canvas = new Canvas(Util.canvasWidth, Util.canvasHeight);
         context = canvas.getGraphicsContext2D();
         map1.setNextMap(map2);
+        context.setImageSmoothing(false);
         map2.setPrevMap(map1);
         map2.setNextMap(map3);
         map3.setPrevMap(map2);
@@ -169,10 +170,32 @@ public class Main extends Application {
 
 
     private void refresh() {
+        int maxHeight = map.getHeight();
+        int maxWidth = map.getWidth();
+        int pX = map.getPlayer().getX();
+        int pY = map.getPlayer().getY();
+        int xDif = 6;
+        int yDif = 4;
+        int startX;
+        int startY;
+        if (pX - xDif < 0) {
+            startX = xDif;
+        } else if (pX + xDif > maxWidth - 1) {
+            startX = maxWidth - xDif - 1;
+        } else {
+            startX = pX;
+        }
+        if (pY - yDif < 0) {
+            startY = yDif;
+        } else if (pY + yDif > maxHeight - 1) {
+            startY = maxHeight - yDif - 1;
+        } else {
+            startY = pY;
+        }
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = startX - xDif; x < startX + xDif + 1; x++) {
+            for (int y = startY - yDif; y < startY + yDif + 1; y++) {
                 renderArea(x, y);
             }
         }
