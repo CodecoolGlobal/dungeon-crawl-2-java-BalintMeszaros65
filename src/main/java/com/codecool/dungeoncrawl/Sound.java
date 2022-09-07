@@ -20,9 +20,18 @@ public enum Sound {
     GHOST("GhostSound.wav"),
     SKELETON("SkeletonSound.wav");
 
+    private final static int ENEMY_SOUND_TIMER = 10;
     private final String soundText;
     Sound(String string) {
         this.soundText = string;
+    }
+
+    public static void playRandomEnemySoundEveryNTurns(int roundCounter) {
+        if (roundCounter % ENEMY_SOUND_TIMER == 0) {
+            Sound[] enemiesSound = {ZOMBIE, GHOST, SKELETON};
+            Sound pickedSound = enemiesSound[Util.randInt(0, 2)];
+            pickedSound.playSound();
+        }
     }
 
     public void playSound() {
@@ -39,4 +48,6 @@ public enum Sound {
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException ignored){}
 
     }
+
+
 }

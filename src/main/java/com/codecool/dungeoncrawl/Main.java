@@ -80,7 +80,7 @@ public class Main extends Application {
         } else {
             Util.youMessage(Color.INDIANRED, "You died!", this.canvas.getWidth(), this.canvas.getHeight(), this.borderPane);
         }
-        Util.playRandomEnemySoundEveryNTurns(roundCounter);
+        Sound.playRandomEnemySoundEveryNTurns(roundCounter);
     }
 
     private void attackWithPlayer(Player player) {
@@ -135,6 +135,7 @@ public class Main extends Application {
         if (enemies != null) {
             for (Actor enemy : enemies) {
                 if (enemy.isAlive()) {
+                    // if enemy is alive act with them depending on their class
                     if (enemy instanceof Zombie) {
                         enemy.act(0, 0);
                     } else if (enemy instanceof Skeleton) {
@@ -148,10 +149,12 @@ public class Main extends Application {
                     }
                     enemy.updateIsAlive();
                 } else {
+                    // if enemy is dead remove it from map and list it for removing from enemies list
                     enemy.getCell().setActor(null);
                     enemiesToBeRemoved.add(enemy);
                 }
             }
+            // remove enemies
             for (Actor enemyToBeRemoved : enemiesToBeRemoved) {
                 enemies.remove(enemyToBeRemoved);
             }
