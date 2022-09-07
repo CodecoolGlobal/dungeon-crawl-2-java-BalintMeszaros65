@@ -262,14 +262,14 @@ public class Main extends Application {
     }
 
     private void useStairs() {
-        if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_UP)) {
+        if (map.getPlayer().getCell().isCellType(CellType.STAIRS_UP)) {
             if (this.map.equals(map3)) {
                 this.map = map.changeMap(map2);
             } else if (this.map.equals(map2)) {
                 this.map = map.changeMap(map1);
             }
             Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
-        } else if (map.getPlayer().isNeighborCellType(0, 0, CellType.STAIRS_DOWN)) {
+        } else if (map.getPlayer().getCell().isCellType(CellType.STAIRS_DOWN)) {
             if (this.map.equals(map1)) {
                 this.map = map.changeMap(map2);
             } else if (this.map.equals(map2)) {
