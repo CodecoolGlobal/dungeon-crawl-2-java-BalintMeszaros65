@@ -46,7 +46,10 @@ public class Main extends Application {
         Util.canvasWidth = map.getWidth() * Tiles.TILE_WIDTH;
         Util.canvasHeight = map.getHeight() * Tiles.TILE_WIDTH;
         canvas = new Canvas(Util.canvasWidth, Util.canvasHeight);
+        canvas.setScaleY(1.5);
+        canvas.setScaleX(1.5);
         context = canvas.getGraphicsContext2D();
+        context.setImageSmoothing(false);
         map1.setNextMap(map2);
         map2.setPrevMap(map1);
         map2.setNextMap(map3);
@@ -173,25 +176,37 @@ public class Main extends Application {
 
 
     private void refresh() {
+        int xDif = 5;
+        int yDif = 4;
+        int startX = getStartPosition(map.getPlayer().getX(), xDif, map.getWidth());
+        int startY = getStartPosition(map.getPlayer().getY(), yDif, map.getHeight());
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                renderArea(x, y);
+        for (int x = startX - xDif; x < startX + xDif + 1; x++) {
+            for (int y = startY - yDif; y < startY + yDif + 1; y++) {
+                Cell cell = map.getCell(x, y);
+                if (cell.hasActor()) {
+                    Tiles.drawTile(context, cell.getActor(), x - startX + xDif, y - startY + yDif);
+                } else if (cell.hasItem()) {
+                    Tiles.drawTile(context, cell.getItem(), x - startX + xDif, y - startY + yDif);
+                } else {
+                    Tiles.drawTile(context, cell, x - startX + xDif, y - startY + yDif);
+                }
             }
         }
         fillGridPane();
     }
 
-    private void renderArea(int x, int y) {
-        Cell cell = map.getCell(x, y);
-        if (cell.hasActor()) {
-            Tiles.drawTile(context, cell.getActor(), x, y);
-        } else if (cell.hasItem()) {
-            Tiles.drawTile(context, cell.getItem(), x, y);
+    private int getStartPosition(int position, int difference, int max) {
+        int startX;
+        if (position - difference < 0) {
+            startX = difference;
+        } else if (position + difference > max - 1) {
+            startX = max - difference - 1;
         } else {
-            Tiles.drawTile(context, cell, x, y);
+            startX = position;
         }
+        return startX;
     }
 
     private void fillGridPane() {
