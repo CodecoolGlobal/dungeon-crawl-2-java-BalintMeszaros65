@@ -8,11 +8,23 @@ public class PlayerModel extends BaseModel {
     private int x;
     private int y;
 
-    public PlayerModel(String playerName, int x, int y) {
+    public boolean isNoClip() {
+        return noClip;
+    }
+
+    public void setNoClip(boolean noClip) {
+        this.noClip = noClip;
+    }
+
+    private boolean noClip;
+
+    public PlayerModel(String playerName, int hp, int x, int y, boolean noClip) {
         super();
         this.playerName = playerName;
+        this.hp = hp;
         this.x = x;
         this.y = y;
+        this.noClip = noClip;
     }
 
     public PlayerModel(Player player) {
@@ -20,17 +32,12 @@ public class PlayerModel extends BaseModel {
         this.playerName = player.getName();
         this.x = player.getX();
         this.y = player.getY();
-
         this.hp = player.getHealth();
-
+        this.noClip = player.getCheater();
     }
 
     public String getPlayerName() {
         return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 
     public int getHp() {

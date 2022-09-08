@@ -12,6 +12,7 @@ import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
 import com.codecool.dungeoncrawl.logic.items.CoinChest;
 import com.codecool.dungeoncrawl.logic.items.HealthPotion;
 import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -117,26 +118,51 @@ public class Main extends Application {
             }
 
 
-        }
-
-        if (player.isAlive()) {
-            switch (keyEvent.getCode()) {
-                case Q -> healPlayerAndMakeTurn(player);
-                case W -> movePlayerAndMakeTurn(player, Direction.NORTH);
-                case S -> movePlayerAndMakeTurn(player, Direction.SOUTH);
-                case A -> movePlayerAndMakeTurn(player, Direction.WEST);
-                case D -> movePlayerAndMakeTurn(player, Direction.EAST);
-                // TODO exit from game and/or program
-                case ESCAPE -> System.out.println("Implement me f'ers!");
-                case SPACE -> attackWithPlayerAndMakeTurn(player);
+        } else if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.L) {
+            // TODO load without hardcoded id
+            GameState gameState = GameDatabaseManager.load(2);
+            PlayerModel playerModel = gameState.getPlayer();
+            map1 = MapLoader.loadMap(gameState, 1);
+            map2 = MapLoader.loadMap(gameState, 2);
+            map3 = MapLoader.loadMap(gameState, 3);
+            map1.setNextMap(map2);
+            map2.setPrevMap(map1);
+            map2.setNextMap(map3);
+            map3.setPrevMap(map2);
+            switch (gameState.getCurrentMap()) {
+                case 1:
+                    map = map1;
+                case 2:
+                    map = map2;
+                case 3:
+                    map = map3;
             }
-
-
-            player.updateIsAlive();
+            Player newPlayer = map.getPlayer();
+            newPlayer.setName(playerModel.getPlayerName());
+            newPlayer.setHealth(playerModel.getHp());
+            newPlayer.setNoClip(playerModel.isNoClip());
+            playerName = playerModel.getPlayerName();
+            refresh();
         } else {
-            Util.youMessage(Color.INDIANRED, "You died!");
+            if (player.isAlive()) {
+                switch (keyEvent.getCode()) {
+                    case Q -> healPlayerAndMakeTurn(player);
+                    case W -> movePlayerAndMakeTurn(player, Direction.NORTH);
+                    case S -> movePlayerAndMakeTurn(player, Direction.SOUTH);
+                    case A -> movePlayerAndMakeTurn(player, Direction.WEST);
+                    case D -> movePlayerAndMakeTurn(player, Direction.EAST);
+                    // TODO exit from game and/or program
+                    case ESCAPE -> System.out.println("Implement me!");
+                    case SPACE -> attackWithPlayerAndMakeTurn(player);
+                }
+
+
+                player.updateIsAlive();
+            } else {
+                Util.youMessage(Color.INDIANRED, "You died!");
+            }
+            Sound.playRandomEnemySoundEveryNTurns(roundCounter);
         }
-        Sound.playRandomEnemySoundEveryNTurns(roundCounter);
     }
 
     private void attackWithPlayer(Player player) {

@@ -28,6 +28,11 @@ public class Player extends Actor {
     private Integer id;
     private final static String SHIELD = "shield";
     private Map<String, Integer> inventory;
+
+    public void setNoClip(boolean noClip) {
+        this.noClip = noClip;
+    }
+
     private boolean noClip;
     private Direction direction;
     private String name;

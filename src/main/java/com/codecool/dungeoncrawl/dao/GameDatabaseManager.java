@@ -12,9 +12,9 @@ import java.sql.SQLException;
 public class GameDatabaseManager {
 
 
-    private PlayerDao playerDao;
+    private static PlayerDao playerDao;
 
-    private GameStateDao gameStateDao;
+    private static GameStateDao gameStateDao;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
@@ -26,6 +26,10 @@ public class GameDatabaseManager {
         PlayerModel model = new PlayerModel(player);
         playerDao.add(model);
         player.setId(model.getId());
+    }
+
+    public static GameState load(int id) {
+        return gameStateDao.get(id);
     }
 
     public void saveGameState(int currentMap, String map1, String map2, String map3, PlayerModel playerModel){

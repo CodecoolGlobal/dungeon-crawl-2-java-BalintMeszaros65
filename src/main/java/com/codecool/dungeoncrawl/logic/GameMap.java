@@ -79,22 +79,16 @@ public class GameMap {
 
     public String toTxtFormat() {
         StringBuilder map = new StringBuilder();
-        map.append(height + ' ' + width + '\n');
+        map.append(String.valueOf(height) + ' ' + width + '\n');
         for (Cell[] cellRow : cells) {
             for (Cell cell : cellRow) {
-                if (cell.isCellType(CellType.EMPTY)) {
-                    map.append(' ');
-                } else if (cell.isCellType(CellType.WALL)) {
-                    map.append('#');
-                } else if (cell.isCellType(CellType.FLOOR)) {
-                    map.append('.');
-                } else if (cell.getActor() instanceof Skeleton) {
+                if (cell.getActor() instanceof Skeleton) {
                     map.append('s');
-                } else if ((cell.getActor() instanceof Player)) {
+                } else if (cell.getActor() instanceof Player) {
                     map.append('@');
-                } else if ((cell.getActor() instanceof Zombie)) {
+                } else if (cell.getActor() instanceof Zombie) {
                     map.append('z');
-                } else if ((cell.getActor() instanceof Ghost)) {
+                } else if (cell.getActor() instanceof Ghost) {
                     map.append('g');
                 } else if (cell.getItem() instanceof Key) {
                     map.append('k');
@@ -114,6 +108,14 @@ public class GameMap {
                     map.append('^');
                 } else if (cell.isCellType(CellType.STAIRS_DOWN)) {
                     map.append('v');
+                } else if (cell.isCellType(CellType.EMPTY)) {
+                    map.append(' ');
+                } else if (cell.isCellType(CellType.WALL)) {
+                    map.append('#');
+                } else if (cell.isCellType(CellType.FLOOR)) {
+                    map.append('.');
+                } else if (cell.isCellType(CellType.DOOR)) {
+                    map.append('o');
                 }
             }
             map.append('\n');
