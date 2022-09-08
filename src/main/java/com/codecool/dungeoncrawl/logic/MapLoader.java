@@ -52,23 +52,23 @@ public class MapLoader {
                             break;
                         case 'k':
                             cell.setType(CellType.FLOOR);
-                            map.setItem(new Key(cell));
+                            new Key(cell);
                             break;
                         case 'd':
                             cell.setType(CellType.DOOR);
-                            map.setItem(new ClosedDoor(cell));
+                            new ClosedDoor(cell);
                             break;
                         case 'c':
                             cell.setType(CellType.FLOOR);
-                            map.setItem(new Coin(cell));
+                            new Coin(cell);
                             break;
                         case 'p':
                             cell.setType(CellType.FLOOR);
-                            map.setItem(new HealthPotion(cell));
+                            new HealthPotion(cell);
                             break;
                         case '/':
                             cell.setType(CellType.FLOOR);
-                            map.setItem(new Sword(cell));
+                            new Sword(cell);
                             break;
                          case '^':
                             cell.setType(CellType.STAIRS_UP);
@@ -78,11 +78,11 @@ public class MapLoader {
                             break;
                         case ')':
                             cell.setType(CellType.FLOOR);
-                            map.setItem(new Shield(cell));
+                            new Shield(cell);
                             break;
                         case '=':
                             cell.setType(CellType.FLOOR);
-                            map.setItem(new CoinChest(cell));
+                            new CoinChest(cell);
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

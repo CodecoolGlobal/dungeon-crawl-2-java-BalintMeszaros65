@@ -47,8 +47,10 @@ public abstract class Actor implements Drawable {
     }
 
     public void sufferDamage (int damage) {
-        this.health -= damage;
-        Sound.DAMAGE.playSound();
+        if (damage > 0) {
+            this.health -= damage;
+            Sound.DAMAGE.playSound();
+        }
     }
 
     public int getHealth() {
@@ -148,7 +150,9 @@ public abstract class Actor implements Drawable {
     }
 
     public void healUp(int health) {
-        this.health += health;
-        Sound.HEAL_UP.playSound();
+        if (health > 0) {
+            this.health += health;
+            Sound.HEAL_UP.playSound();
+        }
     }
 }

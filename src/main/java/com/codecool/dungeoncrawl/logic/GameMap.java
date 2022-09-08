@@ -2,23 +2,16 @@ package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.items.Item;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GameMap {
     private final int width;
     private final int height;
     private Cell[][] cells;
-
     private Player player;
-
     private List<Actor> enemies;
-
-    private List<Item> items;
-
     private GameMap prevMap;
     private GameMap nextMap;
 
@@ -32,7 +25,6 @@ public class GameMap {
             }
         }
         this.enemies = new ArrayList<>();
-        this.items = new ArrayList<>();
         this.prevMap = null;
         this.nextMap = null;
     }
@@ -63,10 +55,6 @@ public class GameMap {
 
     public void setEnemy(Actor enemy) {
         this.enemies.add(enemy);
-    }
-
-    public void setItem(Item item) {
-        this.items.add(item);
     }
 
     public GameMap getPrevMap() {
