@@ -138,33 +138,37 @@ public class Main extends Application {
     private void actWithEnemies() {
         List<Actor> enemies = map.getEnemies();
         List<Actor> enemiesToBeRemoved = new ArrayList<>();
-        if (enemies != null) {
-            for (Actor enemy : enemies) {
-                if (enemy.isAlive()) {
-                    // if enemy is alive act with them depending on their class
-                    if (enemy instanceof Zombie) {
-                        enemy.act(0, 0);
-                    } else if (enemy instanceof Skeleton) {
-                        Skeleton skeleton = (Skeleton) enemy;
-                        int[] DxDy = skeleton.getDxDy();
-                        skeleton.act(DxDy[0], DxDy[1]);
-                    } else if (enemy instanceof Ghost) {
-                        Ghost ghost = (Ghost) enemy;
-                        int[] DxDy = ghost.getDxDy();
-                        ghost.act(DxDy[0], DxDy[1]);
+        if (enemies != null && !enemies.isEmpty()) {
+            enemies.forEach(enemy -> {
+                    if (enemy.isAlive()) {
+                        actWithAliveEnemy(enemy);
+                    } else {
+                        actWithDeadEnemy(enemy, enemiesToBeRemoved);
                     }
-                    enemy.updateIsAlive();
-                } else {
-                    // if enemy is dead remove it from map and list it for removing from enemies list
-                    enemy.getCell().setActor(null);
-                    enemiesToBeRemoved.add(enemy);
                 }
-            }
-            // remove enemies
-            for (Actor enemyToBeRemoved : enemiesToBeRemoved) {
-                enemies.remove(enemyToBeRemoved);
-            }
+            );
+            enemiesToBeRemoved.forEach(enemies::remove);
         }
+    }
+
+    private void actWithAliveEnemy(Actor enemy) {
+        if (enemy instanceof Zombie) {
+            enemy.act(0, 0);
+        } else if (enemy instanceof Skeleton) {
+            Skeleton skeleton = (Skeleton) enemy;
+            int[] DxDy = skeleton.getDxDy();
+            skeleton.act(DxDy[0], DxDy[1]);
+        } else if (enemy instanceof Ghost) {
+            Ghost ghost = (Ghost) enemy;
+            int[] DxDy = ghost.getDxDy();
+            ghost.act(DxDy[0], DxDy[1]);
+        }
+        enemy.updateIsAlive();
+    }
+
+    private void actWithDeadEnemy(Actor enemy, List<Actor> enemiesToBeRemoved) {
+        enemy.getCell().setActor(null);
+        enemiesToBeRemoved.add(enemy);
     }
 
 

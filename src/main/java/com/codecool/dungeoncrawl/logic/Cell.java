@@ -45,16 +45,30 @@ public class Cell implements Drawable {
         Cell result = null;
         try {
             result = gameMap.getCell(x + dx, y + dy);
-        } catch (IndexOutOfBoundsException ignore) {}
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            System.out.println(indexOutOfBoundsException.getMessage());
+        }
         return result;
     }
 
     public Actor getNeighborActor (int dx, int dy) {
-        return gameMap.getCell(x + dx, y + dy).getActor();
+        Actor result = null;
+        try {
+            result = getNeighbor(dx, dy).getActor();
+        } catch (NullPointerException nullPointerException) {
+            System.out.println(nullPointerException.getMessage());
+        }
+        return result;
     }
 
     public Item getNeighborItem (int dx, int dy) {
-        return gameMap.getCell(x + dx, y + dy).getItem();
+        Item result = null;
+        try {
+            result = getNeighbor(dx, dy).getItem();
+        } catch (NullPointerException nullPointerException) {
+            System.out.println(nullPointerException.getMessage());
+        }
+        return result;
     }
 
     @Override
