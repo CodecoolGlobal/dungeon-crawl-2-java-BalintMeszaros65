@@ -16,5 +16,15 @@ CREATE TABLE public.player (
     y integer NOT NULL
 );
 
+DROP TABLE IF EXISTS public.map;
+CREATE TABLE public.map (
+    id serial NOT NULL PRIMARY KEY,
+    game_id integer NOT NULL,
+    map_name text NOT NULL,
+    map_state text NOT NULL
+);
+
 ALTER TABLE ONLY public.game_state
     ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player(id);
+ALTER TABLE ONLY public.map
+    ADD CONSTRAINT fk_game_id FOREIGN KEY (game_id) REFERENCES public.game_state(id);
