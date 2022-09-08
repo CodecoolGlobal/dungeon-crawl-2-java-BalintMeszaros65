@@ -63,7 +63,7 @@ public class GameStateDaoJdbc implements GameStateDao {
             PlayerModel player = new PlayerModel(resultSet.getString(5), resultSet.getInt(7), resultSet.getInt(8));
             player.setHp(resultSet.getInt(6));
 
-            if (resultSet.next()) {
+            if (!resultSet.next()) {
                 return null;
             }
             return new GameState(resultSet.getString(2), resultSet.getDate(3), player);
