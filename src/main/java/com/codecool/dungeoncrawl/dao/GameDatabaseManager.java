@@ -28,8 +28,8 @@ public class GameDatabaseManager {
         player.setId(model.getId());
     }
 
-    public void saveGameState(String currentMap, PlayerModel playerModel){
-        GameState gameState = new GameState(currentMap, new Date(System.currentTimeMillis()), playerModel);
+    public void saveGameState(int currentMap, String map1, String map2, String map3, PlayerModel playerModel){
+        GameState gameState = new GameState(currentMap, map1, map2, map3, new Date(System.currentTimeMillis()), playerModel);
         gameState.setSavedTitle("Test");
         gameStateDao.add(gameState);
     }
