@@ -1,11 +1,19 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.*;
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
+import com.codecool.dungeoncrawl.dao.GameStateDao;
+import com.codecool.dungeoncrawl.dao.PlayerDao;
+import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.Direction;
+import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
 import com.codecool.dungeoncrawl.logic.items.CoinChest;
 import com.codecool.dungeoncrawl.logic.items.HealthPotion;
 import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.model.GameState;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,12 +21,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.util.*;
 
 // TODO sounds
@@ -35,12 +45,19 @@ public class Main extends Application {
     GridPane ui = new GridPane();
     BorderPane borderPane;
 
+    PlayerDao playerDao;
+    GameStateDao gameStateDao;
+
+    private GameDatabaseManager databaseManager;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+        //TODO
+        //Util.PopupMenu();
         map = map1;
         playerName = Util.setUpPlayerName(map);
         Util.canvasWidth = map.getWidth() * Tiles.TILE_WIDTH;
@@ -69,27 +86,86 @@ public class Main extends Application {
 
         primaryStage.setTitle("Platypus Crawl");
         primaryStage.show();
+
+        databaseManager = new GameDatabaseManager();
+        try {
+            databaseManager.setup();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        playerDao = databaseManager.getPlayerDao();
+        gameStateDao = databaseManager.getGameStateDao();
+
+
     }
 
 
     private void onKeyPressed(KeyEvent keyEvent) {
         Player player = map.getPlayer();
-        if (player.isAlive()) {
-            switch (keyEvent.getCode()) {
-                case Q -> healPlayerAndMakeTurn(player);
-                case W -> movePlayerAndMakeTurn(player, Direction.NORTH);
-                case S -> movePlayerAndMakeTurn(player, Direction.SOUTH);
-                case A -> movePlayerAndMakeTurn(player, Direction.WEST);
-                case D -> movePlayerAndMakeTurn(player, Direction.EAST);
-                // TODO exit from game and/or program
-                case ESCAPE -> System.out.println("Implement me f'ers!");
-                case SPACE -> attackWithPlayerAndMakeTurn(player);
+        if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.S) {
+            if (player.getId() == null) {
+                databaseManager.savePlayer(player);
+                player = map.getPlayer();
+                int currentMap = 0;
+                if (map == map1){
+                    currentMap = 1;
+                } else if (map == map2){
+                    currentMap = 2;
+                } else if (map == map3){
+                    currentMap = 3;
+                }
+                databaseManager.saveGameState(currentMap, map1.toTxtFormat(), map2.toTxtFormat(), map3.toTxtFormat(), playerDao.get(player.getId()));
+            } else {
+                PlayerModel playerModel = playerDao.get(player.getId());
+                playerDao.update(playerModel);
             }
-            player.updateIsAlive();
+
+
+        } else if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.L) {
+            // TODO load without hardcoded id
+            GameState gameState = GameDatabaseManager.load(2);
+            PlayerModel playerModel = gameState.getPlayer();
+            map1 = MapLoader.loadMap(gameState, 1);
+            map2 = MapLoader.loadMap(gameState, 2);
+            map3 = MapLoader.loadMap(gameState, 3);
+            map1.setNextMap(map2);
+            map2.setPrevMap(map1);
+            map2.setNextMap(map3);
+            map3.setPrevMap(map2);
+            switch (gameState.getCurrentMap()) {
+                case 1:
+                    map = map1;
+                case 2:
+                    map = map2;
+                case 3:
+                    map = map3;
+            }
+            Player newPlayer = map.getPlayer();
+            newPlayer.setName(playerModel.getPlayerName());
+            newPlayer.setHealth(playerModel.getHp());
+            newPlayer.setNoClip(playerModel.isNoClip());
+            playerName = playerModel.getPlayerName();
+            refresh();
         } else {
-            Util.youMessage(Color.INDIANRED, "You died!");
+            if (player.isAlive()) {
+                switch (keyEvent.getCode()) {
+                    case Q -> healPlayerAndMakeTurn(player);
+                    case W -> movePlayerAndMakeTurn(player, Direction.NORTH);
+                    case S -> movePlayerAndMakeTurn(player, Direction.SOUTH);
+                    case A -> movePlayerAndMakeTurn(player, Direction.WEST);
+                    case D -> movePlayerAndMakeTurn(player, Direction.EAST);
+                    // TODO exit from game and/or program
+                    case ESCAPE -> System.out.println("Implement me!");
+                    case SPACE -> attackWithPlayerAndMakeTurn(player);
+                }
+
+
+                player.updateIsAlive();
+            } else {
+                Util.youMessage(Color.INDIANRED, "You died!");
+            }
+            Sound.playRandomEnemySoundEveryNTurns(roundCounter);
         }
-        Sound.playRandomEnemySoundEveryNTurns(roundCounter);
     }
 
     private void attackWithPlayer(Player player) {
@@ -143,12 +219,12 @@ public class Main extends Application {
         List<Actor> enemiesToBeRemoved = new ArrayList<>();
         if (enemies != null && !enemies.isEmpty()) {
             enemies.forEach(enemy -> {
-                    if (enemy.isAlive()) {
-                        actWithAliveEnemy(enemy);
-                    } else {
-                        actWithDeadEnemy(enemy, enemiesToBeRemoved);
+                        if (enemy.isAlive()) {
+                            actWithAliveEnemy(enemy);
+                        } else {
+                            actWithDeadEnemy(enemy, enemiesToBeRemoved);
+                        }
                     }
-                }
             );
             enemiesToBeRemoved.forEach(enemies::remove);
         }
