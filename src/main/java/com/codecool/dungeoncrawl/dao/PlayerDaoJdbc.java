@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.model.PlayerModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerDaoJdbc implements PlayerDao {
@@ -33,16 +34,51 @@ public class PlayerDaoJdbc implements PlayerDao {
 
     @Override
     public void update(PlayerModel player) {
-
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "UPDATE player SET player_name = ?, hp = ?, x = ?, y = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, player.getPlayerName());
+            statement.setInt(2, player.getHp());
+            statement.setInt(3, player.getX());
+            statement.setInt(4, player.getY());
+            statement.setInt(5, player.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public PlayerModel get(int id) {
-        return null;
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "SELECT player_name, x, y FROM player WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return null;
+            }
+            return new PlayerModel(resultSet.getString(1), resultSet.getInt(2), resultSet.getInt(3));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<PlayerModel> getAll() {
-        return null;
+        try (Connection connection = dataSource.getConnection()) {
+            List<PlayerModel> playerModels = new ArrayList<>();
+            String sql = "SELECT player_name,x, y FROM player";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                playerModels.add(new PlayerModel(resultSet.getString(1), resultSet.getInt(2), resultSet.getInt(3)));
+            }
+            return playerModels;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
