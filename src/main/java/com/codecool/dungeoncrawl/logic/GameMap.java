@@ -2,6 +2,8 @@ package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.*;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
+import com.codecool.dungeoncrawl.logic.actors.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +12,7 @@ public class GameMap {
     private final int width;
     private final int height;
     private Cell[][] cells;
-
     private Player player;
-
     private List<Actor> enemies;
 
     private GameMap prevMap;
