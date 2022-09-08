@@ -102,7 +102,15 @@ public class Main extends Application {
             if (player.getId() == null) {
                 databaseManager.savePlayer(player);
                 player = map.getPlayer();
-                databaseManager.saveGameState(map.toTxtFormat(), playerDao.get(player.getId()));
+                int currentMap = 0;
+                if (map == map1){
+                    currentMap = 1;
+                } else if (map == map2){
+                    currentMap = 2;
+                } else if (map == map3){
+                    currentMap = 3;
+                }
+                databaseManager.saveGameState(currentMap, map1.toTxtFormat(), map2.toTxtFormat(), map3.toTxtFormat(), playerDao.get(player.getId()));
             } else {
                 PlayerModel playerModel = playerDao.get(player.getId());
                 playerDao.update(playerModel);
