@@ -1,11 +1,17 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.*;
+import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
+import com.codecool.dungeoncrawl.dao.PlayerDao;
+import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.Direction;
+import com.codecool.dungeoncrawl.logic.GameMap;
+import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.*;
 import com.codecool.dungeoncrawl.logic.items.ClosedDoor;
 import com.codecool.dungeoncrawl.logic.items.CoinChest;
 import com.codecool.dungeoncrawl.logic.items.HealthPotion;
 import com.codecool.dungeoncrawl.logic.items.Item;
+import com.codecool.dungeoncrawl.model.PlayerModel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,13 +19,18 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 // TODO sounds
 // TODO zoom
@@ -35,12 +46,16 @@ public class Main extends Application {
     GridPane ui = new GridPane();
     BorderPane borderPane;
 
+    PlayerDao playerDao;
+
+    private GameDatabaseManager databaseManager = new GameDatabaseManager();
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         map = map1;
         playerName = Util.setUpPlayerName(map);
         Util.canvasWidth = map.getWidth() * Tiles.TILE_WIDTH;
@@ -66,11 +81,30 @@ public class Main extends Application {
 
         primaryStage.setTitle("Platypus Crawl");
         primaryStage.show();
+
+
     }
 
 
     private void onKeyPressed(KeyEvent keyEvent) {
         Player player = map.getPlayer();
+        if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.S) {
+            try {
+                databaseManager.setup();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            if (player.getId() == null) {
+                databaseManager.savePlayer(player);
+                //databaseManager.saveGameState();
+            } else {
+                PlayerModel playerModel = databaseManager.getPlayerDao().get(player.getId());
+                databaseManager.getPlayerDao().update(playerModel);
+            }
+
+
+        }
+
         if (player.isAlive()) {
             switch (keyEvent.getCode()) {
                 case Q -> healPlayerAndMakeTurn(player);
@@ -82,6 +116,8 @@ public class Main extends Application {
                 case ESCAPE -> System.out.println("Implement me f'ers!");
                 case SPACE -> attackWithPlayerAndMakeTurn(player);
             }
+
+
             player.updateIsAlive();
         } else {
             Util.youMessage(Color.INDIANRED, "You died!");
@@ -140,12 +176,12 @@ public class Main extends Application {
         List<Actor> enemiesToBeRemoved = new ArrayList<>();
         if (enemies != null && !enemies.isEmpty()) {
             enemies.forEach(enemy -> {
-                    if (enemy.isAlive()) {
-                        actWithAliveEnemy(enemy);
-                    } else {
-                        actWithDeadEnemy(enemy, enemiesToBeRemoved);
+                        if (enemy.isAlive()) {
+                            actWithAliveEnemy(enemy);
+                        } else {
+                            actWithDeadEnemy(enemy, enemiesToBeRemoved);
+                        }
                     }
-                }
             );
             enemiesToBeRemoved.forEach(enemies::remove);
         }
