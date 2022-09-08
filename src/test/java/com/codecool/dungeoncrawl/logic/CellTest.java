@@ -42,24 +42,24 @@ class CellTest {
         @Test
         void cellOnEdgeHasNoNeighbor() {
             Cell cell = map.getCell(1, 0);
-            assertEquals(null, cell.getNeighbor(0, -1));
+            assertNull(cell.getNeighbor(0, -1));
 
             cell = map.getCell(1, 2);
-            assertEquals(null, cell.getNeighbor(0, 1));
+            assertNull(cell.getNeighbor(0, 1));
         }
 
         @DisplayName("dx is invalid")
         @Test
         void dxIsInvalid() {
             Cell cell = map.getCell(1, 0);
-            assertEquals(null, cell.getNeighbor(-5, 0));
+            assertNull(cell.getNeighbor(-5, 0));
         }
 
         @DisplayName("dy is invalid")
         @Test
         void dyIsInvalid() {
             Cell cell = map.getCell(1, 0);
-            assertEquals(null, cell.getNeighbor(0, -6));
+            assertNull(cell.getNeighbor(0, -6));
         }
     }
 
@@ -78,21 +78,21 @@ class CellTest {
         @Test
         void NeighborHasNoItem() {
             Cell cell = map.getCell(1, 1);
-            assertEquals(null, cell.getNeighborItem(1, 1));
+            assertNull(cell.getNeighborItem(1, 1));
         }
 
         @DisplayName("dx is invalid")
         @Test
         void itemDxIsInvalid() {
             Cell cell = map.getCell(0, 0);
-            assertEquals(null, cell.getNeighborItem(-5, 1));
+            assertNull(cell.getNeighborItem(-5, 1));
         }
 
         @DisplayName("dy is invalid")
         @Test
         void itemDyIsInvalid() {
             Cell cell = map.getCell(0, 0);
-            assertEquals(null, cell.getNeighborItem(0, -5));
+            assertNull(cell.getNeighborItem(0, -5));
         }
     }
 
@@ -111,21 +111,21 @@ class CellTest {
         @Test
         void NeighborHasNoActor() {
             Cell cell = map.getCell(1, 1);
-            assertEquals(null, cell.getNeighborActor(1, 1));
+            assertNull(cell.getNeighborActor(1, 1));
         }
 
         @DisplayName("dx is invalid")
         @Test
         void itemDxIsInvalid() {
             Cell cell = map.getCell(0, 0);
-            assertEquals(null, cell.getNeighborActor(-5, 1));
+            assertNull(cell.getNeighborActor(-5, 1));
         }
 
         @DisplayName("dy is invalid")
         @Test
         void itemDyIsInvalid() {
             Cell cell = map.getCell(0, 0);
-            assertEquals(null, cell.getNeighborActor(0, -5));
+            assertNull(cell.getNeighborActor(0, -5));
         }
     }
 }
