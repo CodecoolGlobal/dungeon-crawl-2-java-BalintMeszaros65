@@ -12,6 +12,7 @@ public class GameState extends BaseModel {
     private String savedTitle;
 
     public GameState(String currentMap, Date savedAt, PlayerModel player) {
+        super();
         this.currentMap = currentMap;
         this.savedAt = savedAt;
         this.player = player;
