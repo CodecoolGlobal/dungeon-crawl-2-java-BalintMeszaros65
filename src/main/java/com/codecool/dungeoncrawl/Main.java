@@ -172,28 +172,10 @@ public class Main extends Application {
 
 
     private void refresh() {
-        int maxHeight = map.getHeight();
-        int maxWidth = map.getWidth();
-        int pX = map.getPlayer().getX();
-        int pY = map.getPlayer().getY();
         int xDif = 5;
         int yDif = 4;
-        int startX;
-        int startY;
-        if (pX - xDif < 0) {
-            startX = xDif;
-        } else if (pX + xDif > maxWidth - 1) {
-            startX = maxWidth - xDif - 1;
-        } else {
-            startX = pX;
-        }
-        if (pY - yDif < 0) {
-            startY = yDif;
-        } else if (pY + yDif > maxHeight - 1) {
-            startY = maxHeight - yDif - 1;
-        } else {
-            startY = pY;
-        }
+        int startX = getStartPosition(map.getPlayer().getX(), xDif, map.getWidth());
+        int startY = getStartPosition(map.getPlayer().getY(), yDif, map.getHeight());
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = startX - xDif; x < startX + xDif + 1; x++) {
@@ -209,6 +191,18 @@ public class Main extends Application {
             }
         }
         fillGridPane();
+    }
+
+    private int getStartPosition(int position, int difference, int max) {
+        int startX;
+        if (position - difference < 0) {
+            startX = difference;
+        } else if (position + difference > max - 1) {
+            startX = max - difference - 1;
+        } else {
+            startX = position;
+        }
+        return startX;
     }
 
     private void fillGridPane() {
