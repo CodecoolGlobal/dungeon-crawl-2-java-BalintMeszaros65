@@ -18,12 +18,15 @@ public class GameStateDaoJdbc implements GameStateDao {
     @Override
     public void add(GameState state) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "INSERT INTO game_state (saved_title, current_map, saved_at, player_id) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO game_state (saved_title, current_map, map1, map2, map3, saved_at, player_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, state.getSavedTitle());
-            statement.setString(2, state.getCurrentMap());
-            statement.setDate(3, state.getSavedAt());
-            statement.setInt(4, state.getPlayer().getId());
+            statement.setInt(2, state.getCurrentMap());
+            statement.setString(3, state.getMap1());
+            statement.setString(4, state.getMap2());
+            statement.setString(5, state.getMap3());
+            statement.setDate(6, state.getSavedAt());
+            statement.setInt(7, state.getPlayer().getId());
             statement.executeUpdate();
             ResultSet result = statement.getGeneratedKeys();
             result.next();
@@ -39,7 +42,7 @@ public class GameStateDaoJdbc implements GameStateDao {
             String sql = "UPDATE game_state SET saved_title = ?, current_map = ?, saved_at = ? WHERE player_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, state.getSavedTitle());
-            statement.setString(2, state.getCurrentMap());
+            statement.setInt(2, state.getCurrentMap());
             statement.setDate(3, state.getSavedAt());
             statement.setInt(4, state.getPlayer().getId());
             statement.executeUpdate();
@@ -51,7 +54,7 @@ public class GameStateDaoJdbc implements GameStateDao {
     @Override
     public GameState get(int id) {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlGameState = "SELECT game_state.current_map, game_state.saved_at, game_state.player_id, " +
+            String sqlGameState = "SELECT id, saved_title, current_map, map1, map2, map3, saved_at, player_id, " +
                     "player.player_name, player.hp, player.x, player.y " +
                     "FROM game_state " +
                     "INNER JOIN player ON player.id = game_state.player_id " +
@@ -60,13 +63,18 @@ public class GameStateDaoJdbc implements GameStateDao {
             statementGameState.setInt(1, id);
             ResultSet resultSet = statementGameState.executeQuery();
 
-            PlayerModel player = new PlayerModel(resultSet.getString(5), resultSet.getInt(7), resultSet.getInt(8));
-            player.setHp(resultSet.getInt(6));
+
 
             if (!resultSet.next()) {
                 return null;
             }
-            return new GameState(resultSet.getString(2), resultSet.getDate(3), player);
+            PlayerModel player = new PlayerModel(resultSet.getString(9), resultSet.getInt(11), resultSet.getInt(12));
+            player.setId(resultSet.getInt(8));
+            player.setHp(resultSet.getInt(10));
+            GameState gameState = new GameState(resultSet.getInt(3), resultSet.getString(4),
+                    resultSet.getString(5), resultSet.getString(6), resultSet.getDate(7), player);
+            gameState.setId(resultSet.getInt(1));
+            return gameState;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -77,17 +85,25 @@ public class GameStateDaoJdbc implements GameStateDao {
         try (Connection connection = dataSource.getConnection()) {
             List<GameState> gameStates = new ArrayList<>();
 
-            String sqlGameState = "SELECT game_state.id, game_state.current_map, game_state.saved_at, game_state.player_id, " +
+            String sqlGameState = "SELECT id, saved_title, current_map, map1, map2, map3, saved_at, player_id, " +
                     "player.player_name, player.hp, player.x, player.y " +
                     "FROM game_state " +
                     "INNER JOIN player ON player.id = game_state.player_id ";
             PreparedStatement statementGameState = connection.prepareStatement(sqlGameState);
             ResultSet resultSet = statementGameState.executeQuery();
 
+            if (!resultSet.next()) {
+                return null;
+            }
+
             while (resultSet.next()) {
-                PlayerModel playerModel = new PlayerModel(resultSet.getString(5), resultSet.getInt(7), resultSet.getInt(8));
-                playerModel.setHp(resultSet.getInt(6));
-                gameStates.add(new GameState(resultSet.getString(2), resultSet.getDate(3), playerModel));
+                PlayerModel player = new PlayerModel(resultSet.getString(9), resultSet.getInt(11), resultSet.getInt(12));
+                player.setId(resultSet.getInt(8));
+                player.setHp(resultSet.getInt(10));
+                GameState gameState = new GameState(resultSet.getInt(3), resultSet.getString(4),
+                        resultSet.getString(5), resultSet.getString(6), resultSet.getDate(7), player);
+                gameState.setId(resultSet.getInt(1));
+                gameStates.add(gameState);
             }
 
             return gameStates;
