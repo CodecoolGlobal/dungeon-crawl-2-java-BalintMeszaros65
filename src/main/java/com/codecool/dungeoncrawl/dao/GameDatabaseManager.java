@@ -14,8 +14,6 @@ public class GameDatabaseManager {
 
     private PlayerDao playerDao;
 
-
-
     private GameStateDao gameStateDao;
 
     public void setup() throws SQLException {
@@ -30,8 +28,10 @@ public class GameDatabaseManager {
         player.setId(model.getId());
     }
 
-    public void saveGameState(String currentMap, PlayerModel playerModel ){
+    public void saveGameState(String currentMap, PlayerModel playerModel){
         GameState gameState = new GameState(currentMap, new Date(System.currentTimeMillis()), playerModel);
+        gameState.setSavedTitle("Test");
+        gameStateDao.add(gameState);
     }
 
     private DataSource connect() throws SQLException {
