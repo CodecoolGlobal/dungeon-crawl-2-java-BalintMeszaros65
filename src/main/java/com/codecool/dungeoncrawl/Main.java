@@ -28,10 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 // TODO sounds
 // TODO zoom
@@ -58,6 +55,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        //TODO
+        //Util.PopupMenu();
         map = map1;
         playerName = Util.setUpPlayerName(map);
         Util.canvasWidth = map.getWidth() * Tiles.TILE_WIDTH;
@@ -85,6 +84,11 @@ public class Main extends Application {
         primaryStage.show();
 
         databaseManager = new GameDatabaseManager();
+        try {
+            databaseManager.setup();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         playerDao = databaseManager.getPlayerDao();
         gameStateDao = databaseManager.getGameStateDao();
 
@@ -95,14 +99,10 @@ public class Main extends Application {
     private void onKeyPressed(KeyEvent keyEvent) {
         Player player = map.getPlayer();
         if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.S) {
-            try {
-                databaseManager.setup();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
             if (player.getId() == null) {
                 databaseManager.savePlayer(player);
-                //databaseManager.saveGameState();
+                player = map.getPlayer();
+                databaseManager.saveGameState(map.toTxtFormat(), playerDao.get(player.getId()));
             } else {
                 PlayerModel playerModel = playerDao.get(player.getId());
                 playerDao.update(playerModel);
