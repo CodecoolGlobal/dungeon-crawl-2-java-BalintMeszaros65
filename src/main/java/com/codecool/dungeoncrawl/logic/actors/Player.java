@@ -15,8 +15,17 @@ import java.util.Map;
 
 // TODO score
 public class Player extends Actor {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     // TODO constants like shield
     // TODO items as constants, linking them
+    private Integer id;
     private final static String SHIELD = "shield";
     private Map<String, Integer> inventory;
     private boolean noClip;
@@ -161,12 +170,12 @@ public class Player extends Actor {
             }
         } else if (currentCell.isCellType(CellType.STAIRS_DOWN)) {
             GameMap nextMap = currentCell.getGameMap().getNextMap();
-           if (nextMap == null)   {
-               Util.youMessage(Color.BLACK, "You WIN!");
-           } else {
-               Main.changeMap(nextMap, this);
-               Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
-           }
+            if (nextMap == null) {
+                Util.youMessage(Color.BLACK, "You WIN!");
+            } else {
+                Main.changeMap(nextMap, this);
+                Sound.GOING_UP_OR_DOWN_ON_STAIRS.playSound();
+            }
         }
     }
 }
