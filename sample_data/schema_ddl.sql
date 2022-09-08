@@ -1,3 +1,9 @@
+ALTER TABLE public.game_state
+    DROP CONSTRAINT IF EXISTS fk_player_id;
+ALTER TABLE public.player
+    DROP CONSTRAINT IF EXISTS fk_player_id;
+
+
 DROP TABLE IF EXISTS public.player;
 CREATE TABLE public.player (
    id serial NOT NULL PRIMARY KEY,
