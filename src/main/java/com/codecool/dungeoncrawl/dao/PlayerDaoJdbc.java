@@ -73,9 +73,10 @@ public class PlayerDaoJdbc implements PlayerDao {
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 playerModels.add(new PlayerModel(resultSet.getString(1), resultSet.getInt(2), resultSet.getInt(3)));
             }
+
             return playerModels;
         } catch (SQLException e) {
             throw new RuntimeException(e);

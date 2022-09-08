@@ -1,6 +1,7 @@
 package com.codecool.dungeoncrawl;
 
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
+import com.codecool.dungeoncrawl.dao.GameStateDao;
 import com.codecool.dungeoncrawl.dao.PlayerDao;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.Direction;
@@ -47,8 +48,9 @@ public class Main extends Application {
     BorderPane borderPane;
 
     PlayerDao playerDao;
+    GameStateDao gameStateDao;
 
-    private GameDatabaseManager databaseManager = new GameDatabaseManager();
+    private GameDatabaseManager databaseManager;
 
     public static void main(String[] args) {
         launch(args);
@@ -82,6 +84,10 @@ public class Main extends Application {
         primaryStage.setTitle("Platypus Crawl");
         primaryStage.show();
 
+        databaseManager = new GameDatabaseManager();
+        playerDao = databaseManager.getPlayerDao();
+        gameStateDao = databaseManager.getGameStateDao();
+
 
     }
 
@@ -98,8 +104,8 @@ public class Main extends Application {
                 databaseManager.savePlayer(player);
                 //databaseManager.saveGameState();
             } else {
-                PlayerModel playerModel = databaseManager.getPlayerDao().get(player.getId());
-                databaseManager.getPlayerDao().update(playerModel);
+                PlayerModel playerModel = playerDao.get(player.getId());
+                playerDao.update(playerModel);
             }
 
 

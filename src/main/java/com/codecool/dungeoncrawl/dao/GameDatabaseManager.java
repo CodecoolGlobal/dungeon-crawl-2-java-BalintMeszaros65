@@ -1,16 +1,21 @@
 package com.codecool.dungeoncrawl.dao;
 
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.PlayerModel;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.sql.SQLException;
 
 public class GameDatabaseManager {
 
 
     private PlayerDao playerDao;
+
+
+
     private GameStateDao gameStateDao;
 
     public void setup() throws SQLException {
@@ -25,9 +30,9 @@ public class GameDatabaseManager {
         player.setId(model.getId());
     }
 
-    /*public void saveGameState(String currentMap, PlayerModel playerModel ){
-        GameState gameState = new GameState(currentMap, new Date("yyyy-MM-dd HH:mm:ss"), playerModel);
-    }*/
+    public void saveGameState(String currentMap, PlayerModel playerModel ){
+        GameState gameState = new GameState(currentMap, new Date(System.currentTimeMillis()), playerModel);
+    }
 
     private DataSource connect() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
@@ -48,5 +53,8 @@ public class GameDatabaseManager {
 
     public PlayerDao getPlayerDao() {
         return playerDao;
+    }
+    public GameStateDao getGameStateDao() {
+        return gameStateDao;
     }
 }
