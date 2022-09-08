@@ -8,17 +8,26 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 public class GameDatabaseManager {
+
+
     private PlayerDao playerDao;
+    private GameStateDao gameStateDao;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
     public void savePlayer(Player player) {
         PlayerModel model = new PlayerModel(player);
         playerDao.add(model);
+        player.setId(model.getId());
     }
+
+    /*public void saveGameState(String currentMap, PlayerModel playerModel ){
+        GameState gameState = new GameState(currentMap, new Date("yyyy-MM-dd HH:mm:ss"), playerModel);
+    }*/
 
     private DataSource connect() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
@@ -35,5 +44,9 @@ public class GameDatabaseManager {
         System.out.println("Connection ok.");
 
         return dataSource;
+    }
+
+    public PlayerDao getPlayerDao() {
+        return playerDao;
     }
 }
