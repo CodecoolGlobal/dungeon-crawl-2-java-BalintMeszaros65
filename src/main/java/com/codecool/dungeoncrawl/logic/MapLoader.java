@@ -96,6 +96,7 @@ public class MapLoader {
         assert map != null;
         Scanner scanner = new Scanner(map);
 
+        // TODO check if the order is right
         int width = scanner.nextInt();
         int height = scanner.nextInt();
 
